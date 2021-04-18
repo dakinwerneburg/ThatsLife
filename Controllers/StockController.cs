@@ -7,16 +7,11 @@ using System.Threading.Tasks;
 
 namespace ThatsLife.Controllers
 {
-    public class HomeController : Controller
+    [Authorize]
+    public class StockController : Controller
     {
-        public IActionResult Index()
-        {
-           
-            return View();
-        }
-
         
-        public IActionResult About()
+        public IActionResult Exchange()
         {
             return View();
         }

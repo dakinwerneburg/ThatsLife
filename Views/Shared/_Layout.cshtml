@@ -1,20 +1,49 @@
 ﻿<!DOCTYPE html>
-
 <html lang="en">
 <head>
     <meta charset="utf-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>@ViewBag.Title = That's Life</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, shrink-to-fit=no" />
+    <title>@ViewBag.Title - That's Life</title>
     <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.min.css" />
+    <link href="~/lib/font-awesome/css/all.min.css" rel="stylesheet" />
     <link rel="stylesheet" href="~/css/site.css" />
-
-
 </head>
 <body>
-    <div class="container">
+
+    <img src="~/images/thats-life-logo.svg" class="w-25 m-3" />
+    <nav class="navbar navbar-expand-sm navbar-light bg-light border-bottom">
+        <a class="navbar-brand" href="#menu-toggle" id="menu-toggle"><span class="glyphicon glyphicon-list" aria-hidden="true"></span></a>
+        <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#sitenav" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+            <span class="navbar-toggler-icon"></span>
+        </button>
+        <div class="collapse navbar-collapse" id="sitenav">
+            <ul class="navbar-nav flex-grow-1">
+                <li class="nav-item active">
+                    <a class="nav-link text-dark font-weight-bolder" asp-area="" asp-controller="Home" asp-action="Index">Home</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link text-dark" asp-area="" asp-controller="Home" asp-action="About">About</a>
+                </li>
+            </ul>
+            <partial name="_LoginPartial" />
+        </div>
+    </nav>
+    <main>
         @RenderBody()
-    </div>
+    </main>
+    <footer>
+    </footer>
     <script src="~/lib/jquery/dist/jquery.min.js"></script>
     <script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
+    <script>
+        
+        $(document).ready(function () {
+
+            $("#sidebar-toggle").on('click', function () {
+                $("#sidebar").toggleClass("active");
+            });
+        });
+    </script>
+    @await RenderSectionAsync("Scripts", required: false)
 </body>
 </html>

@@ -1,0 +1,62 @@
+﻿@page
+@model RegisterModel
+@{
+    ViewData["Title"] = "Register";
+}
+
+<div class="container vertical-center">
+    <div class="row mx-auto border shadow-lg">
+        <div class="col-md-6 w-50">
+            <form method="post" class="p-4">
+                <h4>Create a new account.</h4>
+                <hr />
+                <div asp-validation-summary="All" class="text-danger"></div>
+                <div class="form-group">
+                    <label asp-for="Input.Email"></label>
+                    <input asp-for="Input.Email" class="form-control" />
+                    <span asp-validation-for="Input.Email" class="text-danger"></span>
+                </div>
+                <div class="form-group">
+                    <label asp-for="Input.Password"></label>
+                    <input asp-for="Input.Password" class="form-control" />
+                    <span asp-validation-for="Input.Password" class="text-danger"></span>
+                </div>
+                <div class="form-group">
+                    <label asp-for="Input.ConfirmPassword"></label>
+                    <input asp-for="Input.ConfirmPassword" class="form-control" />
+                    <span asp-validation-for="Input.ConfirmPassword" class="text-danger"></span>
+                </div>
+                <button type="submit" class="btn btn-primary">Register</button>
+            </form>
+        </div>
+        <div class="col-md-3 border-left w-50">
+            <section>
+                <form id="external-account" asp-page="./ExternalLogin" asp-route-returnUrl="@Model.ReturnUrl" method="post" class="form-horizontal">
+                   
+                        @foreach (var provider in Model.ExternalLogins)
+                        {
+                            <div class="row mt-4">
+                                @if (provider.Name == "Google")
+                                {
+                                    <button type="submit" class="btn align-content-center" name="provider" value="@provider.Name" title="Log in using your @provider.DisplayName account"><img class="img-fluid" src="~/images/btn_google_signin_light_normal_web.png" /></button>
+                                }
+                                else if (provider.Name == "Microsoft")
+                                {
+                                    <button type="submit" class="btn align-content-center" name="provider" value="@provider.Name" title="Log in using your @provider.DisplayName account"><img class="img-fluid border-0" src="~/images/ms-symbollockup_signin_light.svg" /></button>
+                                }
+                                else
+                                {
+                                    <button type="submit" class="btn btn-primary" name="provider" value="@provider.Name" title="Log in using your @provider.DisplayName account">@provider.DisplayName</button>
+                                }
+                            </div>
+                        }
+                 
+                </form>
+            </section>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    <partial name="_ValidationScriptsPartial" />
+}

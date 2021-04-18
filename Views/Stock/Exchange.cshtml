@@ -1,0 +1,15 @@
+﻿
+    <button id="sidebar-toggle" class="d-sm-block d-md-block d-lg-none btn btn-group-toggle p-4 ">
+        <i class="fas fa-align-left"></i>
+        <span>Toggle Sidebar</span>
+    </button>
+
+@await Component.InvokeAsync("Ticker")
+
+
+<div class="d-flex">
+    <partial name="_SideNavigation" />
+
+</div>
+
+
