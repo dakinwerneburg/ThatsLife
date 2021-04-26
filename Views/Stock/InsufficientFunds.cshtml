@@ -1,0 +1,14 @@
+﻿@model decimal 
+
+<div class="row">
+    <div class="col">
+        <div class="card" style="width: 36rem; height:36rem">
+            <img class="card-img-top" src="..." alt="Card image cap">
+            <div class="card-body">
+                <h5 class="card-title">Insufficent Funds</h5>
+                <p class="card-text">You don't have enough funds to cover the @Model.ToString("c") purchase.</p>
+                <a asp-action="Exchange" asp-controller="stock" class="btn btn-primary">Exit</a>
+            </div>
+        </div>
+    </div>
+</div>

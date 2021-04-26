@@ -14,9 +14,11 @@ namespace ThatsLife.Models.DAL
         {
         }
 
-        public DbSet<PlayerProfile> PlayerProfile { get; set; }
-        public DbSet<PlayerStock> PlayerStock { get; set; }
-        public DbSet<PlayerAsset> PlayerAsset {get;set;}
+        public DbSet<PlayerProfile> PlayerProfiles { get; set; }
+        public DbSet<PlayerStock> PlayerStocks { get; set; }
+        public DbSet<PlayerTransaction> PlayerTransactions {get;set;}
+
+
 
 
 

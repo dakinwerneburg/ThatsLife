@@ -1,0 +1,174 @@
+﻿@model ThatsLife.Models.ViewModels.StockQuoteViewModel
+
+
+
+<div class="row w-100">
+    <div class="col-10 offset-2 border shadow m-md-5 ">
+        <div class="row p-4 border border-bottom align-items-center">
+            <div class="col-2">
+                <img src="@Model.LogoUrl" alt="Stock Logo" />
+            </div>
+            <div class="col">
+                <div class="row">
+                    <div class="col">
+                        <div class="row">
+                            <div class="col">
+                                <h5 id="symbol">@Model.StockQuote.Symbol</h5>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col">
+                                <p class="display-4" id="price">@Model.StockQuote.LatestPrice.ToString("0.00")</p>
+                            </div>
+                        </div>
+                        <div class="row stock-up font-weight-bold">
+                            @if (Model.StockQuote.Change > 0)
+                            {
+                                <div class="col">
+                                    +@Model.StockQuote.Change.ToString("0.00")  (@Model.StockQuote.ChangePercent.ToString("p2"))
+                                </div>
+                            }
+                            else
+                            {
+                                <div class="col stock-down">
+                                    @Model.StockQuote.Change.ToString("0.00")  (@Model.StockQuote.ChangePercent.ToString("p2"))
+                                </div>
+                            }
+
+                        </div>
+
+                    </div>
+                </div>
+            </div>
+            <div class="col-1">
+                @if (Model.StockQuote.IsUSMarketOpen)
+                {
+                    <p class="text-danger">Market Closed</p>
+                }
+                else
+                {
+                    <p class="text-success">Market Open</p>
+                }
+                <p class="font-weight-light">@Model.StockQuote.LatesUpdateDT EST</p>
+            </div>
+            <div class="col-3" >
+                <div class="input-group mb-3">
+                    <div class="input-group-prepend">
+                        <label class="input-group-text">Shares</label>
+                    </div>
+                        <input type="text" id="shares" class="form-control">
+                    <div class="input-group-append">
+                        <button type="button" class="btn btn-primary" onclick="Confirm()">BUY</button>
+                    </div>
+                </div>
+            </div>
+
+        </div>
+        <div class="row p-4 ml-4 ">
+            <div class="row w-100 my-3 ">
+                <div class="col">
+                    <h3>Company</h3>
+                </div>
+            </div>
+            <div class="row text-secondary w-100">
+                <div class="col">
+                    <h5>Name</h5>
+                    <p>@Model.Company.companyName</p>
+                </div>
+                <div class="col">
+                    <h5>Headquarters</h5>
+                    <p>@Model.Company.city, @Model.Company.state</p>
+                </div>
+                <div class="col">
+                    <h5>Ceo</h5>
+                    <p>@Model.Company.CEO</p>
+                </div>
+                <div class="col">
+                    <h5>Industry</h5>
+                    <p>@Model.Company.industry</p>
+                </div>
+                <div class="col">
+                    <h5>Sector</h5>
+                    <p>@Model.Company.sector</p>
+                </div>
+                <div class="col">
+                    <h5>Employees</h5>
+                    <p>@Model.Company.employees</p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+</div>
+<div class="row w-100">
+    <div class="col-5 offset-2 border shadow mx-md-5 mt-0 ">
+        <div class="row p-4 ">
+            <div class="col">
+                <h3>Overview</h3>
+            </div>
+        </div>
+        <div class="row  p-4">
+            <div class="col">
+                <h5 class="mt-2 text-dark">Prev Close</h5>
+                <p>@Model.StockQuote.PreviousClose.ToString("0.00")</p>
+                <h5 class="mt-2 text-dark">Day's Range</h5>
+                <p>@Model.StockQuote.Low - @Model.StockQuote.High</p>
+                <h5 class="mt-2 text-dark">52 Week Range</h5>
+                <p>@Model.StockQuote.Week52Low - @Model.StockQuote.Week52High</p>
+                <h5 class="mt-2 text-dark">Year-to-Date Change</h5>
+                <p>@Model.StockQuote.YtdChange.ToString("p")</p>
+            </div>
+            <div class="col">
+                <h5 class="mt-2 text-dark">Market Cap</h5>
+                <p>@Model.StockQuote.MarketCap</p>
+                <h5 class="mt-2 text-dark">P/E Ratio</h5>
+                <p>@Model.StockQuote.PeRatio</p>
+                <h5 class="mt-2 text-dark">Volume</h5>
+                <p>@Model.StockQuote.LatestVolume</p>
+            </div>
+        </div>
+    </div>
+    <div class="col-5 offset-2 border shadow mx-md-5 mt-0 ">
+        <div class="row p-4 ">
+            <div class="col">
+                <h3>Intraday Stock Price</h3>
+                <img src="~/images/ChartDemoPlaceHoder.JPG" class="w-100" />
+            </div>
+        </div>
+    </div>
+
+</div>
+
+    
+
+
+<div id="confirm-modal" class="modal fade row" tabindex="-1" role="dialog" aria-labelledby="confirm-modal-lbl" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-hidden="true"></button>
+                <h3 id="confirm-modal-lbl">Purchase Order</h3>
+            </div>
+            <div class="modal-body">
+                <div class="container-fluid">
+                    <div class="row">
+                        <div class="col">
+                            <p class="font-weight-bold">The following will be submitted and deducted from your virtual account.  Please Confirm.</p>
+                            <p id="confirm-modal-company" class="h6 mt-5">@Model.StockQuote.CompanyName</p>
+                            <p id="confirm-modal-symbol" class="h6">@Model.StockQuote.Symbol</p>
+                            <div class="text-center">
+                                <span id="confirm-modal-shares"></span>
+                                <span id="confirm-modal-price"> Shares @@ @Model.StockQuote.LatestPrice.ToString("c") = </span>
+                                <span id="confirm-modal-total"></span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button class="btn" data-dismiss="modal" aria-hidden="true">Cancel</button>
+                <button class="btn btn-success" onclick="Purchase('@Model.Player.Id','@Model.StockQuote.PeRatio')">Confirm</button>
+            </div>
+        </div>
+    </div>
+</div>

@@ -11,6 +11,7 @@ namespace ThatsLife.Models
     {
         public int Id { get; set; }
         
+        [Required]
         public string StockSymbol { get; set; }
 
         [ForeignKey("Profile")]
@@ -20,6 +21,7 @@ namespace ThatsLife.Models
         public int Shares { get; set; }
 
         [Required]
+        [Column(TypeName = "decimal(8,2)")]
         public decimal PurchasePrice { get; set; }
     }
 }

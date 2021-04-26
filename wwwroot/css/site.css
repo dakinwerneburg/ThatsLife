@@ -1,7 +1,6 @@
 ﻿
-.logo {
-    height: 5rem;
-    background-color: white;
+.banner{
+    width:100%;
 }
 
 .img-fluid {
@@ -9,12 +8,15 @@
     height: auto;
 }
 
-.ticker-stock-up {
+.stock-up {
     color: #18BB5C
 }
 
-.ticker-stock-down {
+.stock-down {
     color: #FF433D
+}
+::-webkit-input-placeholder { /* Edge */
+    color: #F8F8F8;
 }
 
 
@@ -46,19 +48,21 @@
 }
 
 
+
+.input-quote{
+    width:500px;
+}
+
 @media (max-width: 768px) {
     .vertical-center {
         height: auto;
     }
     #sidebar.active {
-        margin-left: 0rem;
-        background-color:red;
+        margin-left: -30rem;
     }
-
         #sidebar {
-            margin-left: -30rem;
+            margin-left: 0;
         }
-    
 }
 
 

@@ -4,11 +4,15 @@
   "libraries": [
     {
       "library": "twitter-bootstrap@4.6.0",
-      "destination": "lib/twitter-bootstrap/"
+      "destination": "wwwroot/lib/twitter-bootstrap/"
     },
     {
       "library": "font-awesome@5.15.3",
       "destination": "wwwroot/lib/font-awesome/"
+    },
+    {
+      "library": "jqueryui@1.12.1",
+      "destination": "wwwroot/lib/jqueryui/"
     }
   ]
 }

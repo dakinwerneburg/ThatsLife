@@ -1,0 +1,27 @@
+﻿@model IEnumerable<ThatsLife.Models.StockQuote>
+
+<div class="border shadow-lg gain-decline p-4 mr-md-5">
+
+    <p class="pb-4"><b class="pr-4">DECLINERS</b> @Model.First().LatesUpdateDT EST<p>
+        <table class="table">
+            <tr class="font-bold text-secondary">
+                <th>SYMBOL</th>
+                <th>NAME</th>
+                <th class="text-right">LAST</th>
+                <th class="text-right">CHANGE</th>
+                <th class="text-right">CHANGE PERCENTAGE</th>
+
+            </tr>
+            @foreach (var stock in Model)
+            {
+                <tr>
+                    <td><i class="fas fa-caret-down stock-down"></i> @stock.Symbol</td>
+                    <td>@stock.CompanyName</td>
+                    <td class="text-right">@stock.LatestPrice.ToString("c")</td>
+                    <td class="stock-down text-right">@stock.Change.ToString("0.00")</td>
+                    <td class="stock-down text-right">@stock.ChangePercent.ToString("p")</td>
+                </tr>
+            }
+
+        </table>
+</div>

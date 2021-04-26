@@ -1,8 +1,9 @@
-﻿using System;
-using System.Collections.Generic;
+﻿
+
+using Newtonsoft.Json;
+using Newtonsoft.Json.Converters;
+using System;
 using System.ComponentModel.DataAnnotations;
-using System.Linq;
-using System.Threading.Tasks;
 
 namespace ThatsLife.Models
 {
@@ -14,14 +15,17 @@ namespace ThatsLife.Models
         public float? Open { get; set; }
         public float? High { get; set; }
         public float? Low { get; set; }
-        public float? LatestPrice { get; set; }
-        public long? LatestUpdate { get; set; }
+
+        [DisplayFormat(DataFormatString = "c")]
+        public decimal LatestPrice { get; set; }
+
+        public long LatestUpdate { get; set; }
         public float? LatestVolume { get; set; }
         public float PreviousClose { get; set; }
         public int PreviousVolume { get; set; }
+
         public float Change { get; set; }
 
-        
         public decimal ChangePercent { get; set; }
         public int AvgTotalVolume { get; set; }
         public long MarketCap { get; set; }
@@ -30,5 +34,13 @@ namespace ThatsLife.Models
         public float Week52Low { get; set; }
         public float YtdChange { get; set; }
         public bool IsUSMarketOpen { get; set; }
+        public DateTime LatesUpdateDT
+        {
+            get
+            {
+                return DateTimeOffset.FromUnixTimeMilliseconds(LatestUpdate).LocalDateTime;
+            }
+        }
+
     }
 }

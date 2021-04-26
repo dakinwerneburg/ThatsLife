@@ -1,4 +1,6 @@
-﻿<!DOCTYPE html>
+﻿@using Microsoft.AspNetCore.Identity
+@inject SignInManager<IdentityUser> SignInManager
+<!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="utf-8" />
@@ -6,11 +8,15 @@
     <title>@ViewBag.Title - That's Life</title>
     <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.min.css" />
     <link href="~/lib/font-awesome/css/all.min.css" rel="stylesheet" />
+    <link href="~/lib/jqueryui/jquery-ui.min.css" rel="stylesheet" />
     <link rel="stylesheet" href="~/css/site.css" />
 </head>
 <body>
 
-    <img src="~/images/thats-life-logo.svg" class="w-25 m-3" />
+
+
+
+    <img src="~/images/city2.png" class="banner" />
     <nav class="navbar navbar-expand-sm navbar-light bg-light border-bottom">
         <a class="navbar-brand" href="#menu-toggle" id="menu-toggle"><span class="glyphicon glyphicon-list" aria-hidden="true"></span></a>
         <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#sitenav" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
@@ -29,20 +35,61 @@
         </div>
     </nav>
     <main>
+        @if (SignInManager.IsSignedIn(User))
+        {
+            <button id="sidebar-toggle" class=" col-1 d-sm-block d-md-block d-lg-none btn btn-group-toggle p-4 ">
+                <i class="fas fa-align-left"></i>
+            </button>
+            <div class="d-flex">
+                <partial name="_SideNavigation" />
+                <div class="container-fluid">
+                    @await Component.InvokeAsync("Ticker")
+                    @await Component.InvokeAsync("Player")
+                    @RenderBody()
+                </div>
+            </div>
+
+        }
         @RenderBody()
+        <
     </main>
     <footer>
     </footer>
     <script src="~/lib/jquery/dist/jquery.min.js"></script>
     <script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
     <script>
-        
         $(document).ready(function () {
-
             $("#sidebar-toggle").on('click', function () {
                 $("#sidebar").toggleClass("active");
             });
         });
+
+        function Purchase(player,peRatio) {
+            var symbolValue = document.getElementById("symbol").innerHTML;
+            var playerValue = player;
+            var priceValue = document.getElementById("price").innerHTML;
+            var sharesValue = document.getElementById("shares").value;
+
+            window.location.href = '@Url.Action("buy","stock")?symbol=' + symbolValue +
+                '&playerId=' + playerValue +
+                '&price=' + priceValue +
+                '&shares=' + sharesValue+
+                '&peRatio=' + peRatio;
+        };
+
+        function Confirm () {
+            var priceValue = document.getElementById("price").innerHTML;
+            var sharesValue = document.getElementById("shares").value;
+            var total = (sharesValue * priceValue).toLocaleString('en-US', {
+                style: 'currency',
+                currency: 'USD'
+            });
+            
+            document.getElementById("confirm-modal-shares").innerHTML = sharesValue;
+            document.getElementById("confirm-modal-total").innerHTML = total;
+            $('#confirm-modal').modal('show')
+        }
+
     </script>
     @await RenderSectionAsync("Scripts", required: false)
 </body>

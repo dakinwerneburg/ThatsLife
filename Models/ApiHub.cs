@@ -1,7 +1,6 @@
-﻿using Microsoft.Extensions.Configuration;
-using System;
+﻿using Newtonsoft.Json;
+using Newtonsoft.Json.Linq;
 using System.Collections.Generic;
-using System.Linq;
 using System.Net.Http;
 using System.Net.Http.Headers;
 using System.Threading.Tasks;
@@ -16,11 +15,35 @@ namespace ThatsLife.Models
     public static class ApiHub
     {
         public static HttpClient client { get; set; }
+
         public static void InitializeClient()
         {
             client = new HttpClient();
             client.DefaultRequestHeaders.Accept.Clear();
             client.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue("application/json"));
         }
+
+
+        public static async Task<string> GetJson(string url)
+        {
+            string json = "";
+            using (HttpResponseMessage response = await ApiHub.client.GetAsync(url))
+            {
+                if (response.IsSuccessStatusCode)
+                {
+                    json = await response.Content.ReadAsStringAsync();
+                }
+                else
+                {
+                    throw new HttpRequestException();
+                }
+            }
+            return json;
+        }
     }
 }
+
+
+
+
+

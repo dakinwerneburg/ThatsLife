@@ -13,12 +13,20 @@ namespace ThatsLife.Models
 
         [Required]
         [ForeignKey("IdentityUser")]
-        public int UserId { get; set; }
+        public string UserId { get; set; }
+
         public string ProfileName { get; set; }
 
         public byte[] ProfileImage { get; set; }
 
+        [Required]
         public int PrestigeScore { get; set; }
+
+        [Required]
+        
+        [Column(TypeName = "decimal(8,2)")]
+        [DisplayFormat(DataFormatString = "{0:c}")]
+        public decimal Currency { get; set; }
 
     }
 }

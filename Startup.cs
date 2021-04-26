@@ -13,7 +13,6 @@ namespace ThatsLife
 {
     public class Startup
     {
-      
         public IConfiguration Configuration { get;}
         public Startup(IConfiguration configuration)
         {
@@ -42,6 +41,9 @@ namespace ThatsLife
                 microsoftOptions.ClientId = Configuration["Authentication:Microsoft:ClientId"];
             microsoftOptions.ClientSecret = Configuration["Authentication:Microsoft:ClientSecret"];
         });
+            services.AddScoped<IRepository<PlayerProfile>, ProfileRepository>();
+            services.AddScoped<IRepository<PlayerStock>, StockRepository>();
+            services.AddScoped<IRepository<PlayerTransaction>,TransactionRepository>();
             services.AddControllersWithViews();
             services.AddRazorPages();
         }

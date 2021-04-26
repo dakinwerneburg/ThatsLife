@@ -1,15 +1,27 @@
 ﻿
-    <button id="sidebar-toggle" class="d-sm-block d-md-block d-lg-none btn btn-group-toggle p-4 ">
-        <i class="fas fa-align-left"></i>
-        <span>Toggle Sidebar</span>
-    </button>
+        <!--Displays Heading and inline form to get stock symbol to lookup-->
+        <div class="row align-items-center">
+            <div class="col-8">
+                <p class="display-4">
+                    Stock Activity
+                </p>
+                <p class="mb-3 lead">List of Gainers and Decliners are common stocks that have a market cap of at least 200M and a volume of at least 20K</p>
+            </div>
+            <div class="col-4">
+                <form asp-action="stockquote" method="post" class="form-inline">
+                    <div class="form-group">
+                        <input type="text" class="form-control form-control-lg" id="symbol" name="symbol" placeholder="Enter Stock Symbol">
+                    </div>
+                    <button type="submit" class="btn btn-primary ml-md-3">Get Stock Quote</button>
+                </form>
+            </div>
+        </div>
+        
+        <!--Provides two regions on exchange that show top 10 gainers and top 10 decliners-->
+        <div class="row">
+            <div class="col">@await Component.InvokeAsync("Gainers")</div>
+            <div class="col"> @await Component.InvokeAsync("Decliners")</div>
+        </div>
 
-@await Component.InvokeAsync("Ticker")
-
-
-<div class="d-flex">
-    <partial name="_SideNavigation" />
-
-</div>
 
 
