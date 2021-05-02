@@ -43,11 +43,11 @@
             <div class="col-1">
                 @if (Model.StockQuote.IsUSMarketOpen)
                 {
-                    <p class="text-danger">Market Closed</p>
+                    <p class="text-success">Market Open</p>
                 }
                 else
                 {
-                    <p class="text-success">Market Open</p>
+                    <p class="text-danger">Market Closed</p>
                 }
                 <p class="font-weight-light">@Model.StockQuote.LatesUpdateDT EST</p>
             </div>
@@ -58,7 +58,7 @@
                     </div>
                         <input type="text" id="shares" class="form-control">
                     <div class="input-group-append">
-                        <button type="button" class="btn btn-primary" onclick="Confirm()">BUY</button>
+                        <button type="button" class="btn btn-primary" onclick="ConfirmBuy()">BUY</button>
                     </div>
                 </div>
             </div>
@@ -140,26 +140,24 @@
 </div>
 
     
-
-
-<div id="confirm-modal" class="modal fade row" tabindex="-1" role="dialog" aria-labelledby="confirm-modal-lbl" aria-hidden="true">
+<div id="confirmBuy-modal" class="modal fade row" tabindex="-1" role="dialog" aria-labelledby="confirmBuy-modal-lbl" aria-hidden="true">
     <div class="modal-dialog">
         <div class="modal-content">
             <div class="modal-header">
                 <button type="button" class="close" data-dismiss="modal" aria-hidden="true"></button>
-                <h3 id="confirm-modal-lbl">Purchase Order</h3>
+                <h3 id="confirmBuy-modal-lbl">Purchase Order</h3>
             </div>
             <div class="modal-body">
                 <div class="container-fluid">
                     <div class="row">
                         <div class="col">
                             <p class="font-weight-bold">The following will be submitted and deducted from your virtual account.  Please Confirm.</p>
-                            <p id="confirm-modal-company" class="h6 mt-5">@Model.StockQuote.CompanyName</p>
-                            <p id="confirm-modal-symbol" class="h6">@Model.StockQuote.Symbol</p>
+                            <p id="confirmBuy-modal-company" class="h6 mt-5">@Model.StockQuote.CompanyName</p>
+                            <p id="confirmBuy-modal-symbol" class="h6">@Model.StockQuote.Symbol</p>
                             <div class="text-center">
-                                <span id="confirm-modal-shares"></span>
-                                <span id="confirm-modal-price"> Shares @@ @Model.StockQuote.LatestPrice.ToString("c") = </span>
-                                <span id="confirm-modal-total"></span>
+                                <span id="confirmBuy-modal-shares"></span>
+                                <span id="confirmBuy-modal-price"> Shares @@ @Model.StockQuote.LatestPrice.ToString("c") = </span>
+                                <span id="confirmBuy-modal-total"></span>
                             </div>
                         </div>
                     </div>
@@ -167,7 +165,7 @@
             </div>
             <div class="modal-footer">
                 <button class="btn" data-dismiss="modal" aria-hidden="true">Cancel</button>
-                <button class="btn btn-success" onclick="Purchase('@Model.Player.Id','@Model.StockQuote.PeRatio')">Confirm</button>
+                <button class="btn btn-success" onclick="Purchase('@Model.StockQuote.PeRatio')">Confirm</button>
             </div>
         </div>
     </div>

@@ -1,20 +1,15 @@
-﻿using System;
+﻿using Microsoft.AspNetCore.Authentication;
+using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Identity;
+using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Mvc.RazorPages;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.Linq;
-using System.Text;
-using System.Text.Encodings.Web;
 using System.Threading.Tasks;
-using Microsoft.AspNetCore.Authentication;
-using Microsoft.AspNetCore.Authorization;
-using Microsoft.AspNetCore.Identity;
-using Microsoft.AspNetCore.Identity.UI.Services;
-using Microsoft.AspNetCore.Mvc;
-using Microsoft.AspNetCore.Mvc.RazorPages;
-using Microsoft.AspNetCore.WebUtilities;
-using Microsoft.Extensions.Logging;
 using ThatsLife.Models;
 using ThatsLife.Models.DAL;
+using ThatsLife.Models.Entity;
 
 namespace ThatsLife.Areas.Identity.Pages.Account
 {
@@ -23,18 +18,27 @@ namespace ThatsLife.Areas.Identity.Pages.Account
     {
         private readonly SignInManager<IdentityUser> _signInManager;
         private readonly UserManager<IdentityUser> _userManager;
-        private readonly IRepository<PlayerProfile> _ProfileRepository;
-       
-      
+        private readonly IRepository<PlayerProfile> _profileRepository;
+        private readonly IRepository<PlayerCash> _cashRepository;
+        private readonly IRepository<PlayerTransaction> _transactionRepository;
+        private readonly IRepository<PlayerPrestigeScore> _prestigescoreRepository;
+
+
         public RegisterModel(
             UserManager<IdentityUser> userManager,
             SignInManager<IdentityUser> signInManager,
-           IRepository<PlayerProfile> profileRepository)
+           IRepository<PlayerProfile> profileRepository,
+           IRepository<PlayerCash> cashRepository,
+           IRepository<PlayerTransaction> tranactionRepository,
+            IRepository<PlayerPrestigeScore> prestigescoreRepository)
 
         {
             _userManager = userManager;
             _signInManager = signInManager;
-            _ProfileRepository = profileRepository;
+            _profileRepository = profileRepository;
+            _cashRepository = cashRepository;
+            _transactionRepository = tranactionRepository;
+            _prestigescoreRepository = prestigescoreRepository;
         }
 
         [BindProperty]
@@ -81,19 +85,34 @@ namespace ThatsLife.Areas.Identity.Pages.Account
                 {
                     await _signInManager.SignInAsync(user, isPersistent: false);
 
-                    PlayerProfile profile = new PlayerProfile();
-                    profile.CreatedDate = DateTime.Now;
-                    profile.Currency = 100000;
-                    profile.PrestigeScore = 0;
-                    profile.ProfileName = Input.Email;
-                    profile.UserId = user.Id;
-
-                    _ProfileRepository.Create(profile);
-
-                    //return LocalRedirect(returnUrl);
-                    return RedirectToAction("Exchange", "Stock", profile);
+                    //Creates player after they are authenticated and not in database
+                    PlayerProfile player = new PlayerProfile();
+                    player.ProfileName = User.Identity.Name;
+                    player.UserId = user.Id;
+                    _profileRepository.Create(player);
+                    player = _profileRepository.FindByCondition(p => p.UserId == user.Id).FirstOrDefault();
 
 
+                    PlayerCash playerCash = new PlayerCash();
+                    playerCash.ProfileId = player.Id;
+                    playerCash.Balance = 1000000;
+                    _cashRepository.Create(playerCash);
+
+                    PlayerTransaction playerTransaction = new PlayerTransaction();
+                    playerTransaction.Price = 1000000;
+                    playerTransaction.ProfileId = player.Id;
+                    playerTransaction.TransactionType = "Credit";
+                    playerTransaction.TransactionDescription = "Player Created";
+                    _transactionRepository.Create(playerTransaction);
+
+                    PlayerPrestigeScore playerPrestigeScore = new PlayerPrestigeScore();
+                    playerPrestigeScore.ProfileId = player.Id;
+                    playerPrestigeScore.Score = 0;
+                    playerPrestigeScore.Source = "Player Created";
+                    _prestigescoreRepository.Create(playerPrestigeScore);
+
+
+                    return LocalRedirect(returnUrl);
                 }
                 foreach (var error in result.Errors)
                 {

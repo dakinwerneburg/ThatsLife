@@ -4,10 +4,13 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Configuration;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
+using System.Collections.Generic;
 using System.Linq;
+using System.Text;
 using System.Threading.Tasks;
 using ThatsLife.Models;
 using ThatsLife.Models.DAL;
+using ThatsLife.Models.Entity;
 using ThatsLife.Models.ViewModels;
 
 namespace ThatsLife.Controllers
@@ -17,12 +20,14 @@ namespace ThatsLife.Controllers
     {
         private readonly UserManager<IdentityUser> _userManager;
         private readonly IRepository<PlayerProfile> _ProfileRepository;
-        private readonly IRepository<PlayerStock> _StockRepository;
-        private readonly IRepository<PlayerTransaction> _TransactionRepository;
-        private readonly IConfiguration _Configuration;
-        private string _URL;
-        private string _IExcloudKey;
-        private StockQuote stockQuote;
+        private readonly IRepository<PlayerStock> _stockRepository;
+        private readonly IRepository<PlayerTransaction> _transactionRepository;
+        private readonly IRepository<PlayerPrestigeScore> _prestigescoreRepository;
+        private readonly IRepository<PlayerCash> _cashRepository;
+        private readonly IConfiguration _configuration;
+        private string _url;
+        private string _iexcloudKey;
+        //private StockQuote stockQuote;
 
 
         public StockController(SignInManager<IdentityUser> signInManager,
@@ -30,14 +35,18 @@ namespace ThatsLife.Controllers
                        IRepository<PlayerProfile> profileRepository,
                        IRepository<PlayerStock> stockRepository,
                        IRepository<PlayerTransaction> transactionRepository,
-                       IConfiguration configuration
-                       )
+                       IRepository<PlayerPrestigeScore> prestigescoreRepository,
+                       IRepository<PlayerCash> cashRepository,
+                       IConfiguration configuration)
         {
             _userManager = userManager;
             _ProfileRepository = profileRepository;
-            _StockRepository = stockRepository;
-            _TransactionRepository = transactionRepository;
-            _Configuration = configuration;
+            _stockRepository = stockRepository;
+            _transactionRepository = transactionRepository;
+            _prestigescoreRepository = prestigescoreRepository;
+            _cashRepository = cashRepository;
+            _configuration = configuration;
+            _iexcloudKey = _configuration["APIs:IExapix"];
         }
 
 
@@ -50,21 +59,26 @@ namespace ThatsLife.Controllers
             StockQuoteViewModel stockQuoteViewModel = new StockQuoteViewModel();
             stockQuoteViewModel.Player = player;
 
-            _IExcloudKey = _Configuration["APIs:IExapix"];
-            _URL = $"https://cloud.iexapis.com/stable/stock/{symbol}/quote?token={_IExcloudKey}";
-            var json = await ApiHub.GetJson(_URL);
-            stockQuote = JsonConvert.DeserializeObject<StockQuote>(json);
+            var settings = new JsonSerializerSettings
+            {
+                NullValueHandling = NullValueHandling.Ignore,
+                MissingMemberHandling = MissingMemberHandling.Ignore
+            };
+
+            _url = $"https://cloud.iexapis.com/stable/stock/{symbol}/quote?token={_iexcloudKey}";
+            var json = await ApiHub.GetJson(_url);
+            StockQuote stockQuote = JsonConvert.DeserializeObject<StockQuote>(json,settings);
             stockQuoteViewModel.StockQuote = stockQuote;
 
-            _URL = $"https://cloud.iexapis.com/stable/stock/{symbol}/logo?token={_IExcloudKey}";
-            json = await ApiHub.GetJson(_URL);
+            _url = $"https://cloud.iexapis.com/stable/stock/{symbol}/logo?token={_iexcloudKey}";
+            json = await ApiHub.GetJson(_url);
             JObject obj = JObject.Parse(json);
             string logoUrl = (string)obj["url"];
             stockQuoteViewModel.LogoUrl = logoUrl;
 
-            _URL = $"https://cloud.iexapis.com/stable/stock/{symbol}/company?token={_IExcloudKey}";
-            json = await ApiHub.GetJson(_URL);
-            stockQuoteViewModel.Company = JsonConvert.DeserializeObject<Company>(json);
+            _url = $"https://cloud.iexapis.com/stable/stock/{symbol}/company?token={_iexcloudKey}";
+            json = await ApiHub.GetJson(_url);
+            stockQuoteViewModel.Company = JsonConvert.DeserializeObject<Company>(json,settings);
 
             return View("StockQuote", stockQuoteViewModel);
         }
@@ -80,63 +94,199 @@ namespace ThatsLife.Controllers
         /// <param name="shares"></param>
         /// <param name="peRatio"></param>
         /// <returns></returns>
-        public IActionResult Buy(string symbol, string playerId, string price, string shares, string peRatio)
+        public IActionResult Buy(string symbol, string price, string shares, string peRatio)
         {
-            PlayerStock PlayerStock = new PlayerStock();
-            PlayerTransaction playerTransaction = new PlayerTransaction();
-            var userId = _userManager.GetUserId(User);
-            PlayerProfile player = _ProfileRepository.FindByCondition(p => p.Id == int.Parse(playerId)).First();
 
             decimal _price = decimal.Parse(price);
             int _shares = int.Parse(shares);
             decimal _peRatio = decimal.Parse(peRatio);
             decimal total = _price * _shares;
 
-            //prestige score is based on P/E Ratio. 
-            decimal purchaseToPlayerCurrencyRatio = total / player.Currency;  //how vested the player is in this stock
-            decimal stockValue = 100 - _peRatio;  //lower P/E Ratio means stock is more valuable
-            decimal PrestigeScore = stockValue * _shares * purchaseToPlayerCurrencyRatio;
-            int score = (int)PrestigeScore;
+            var userId = _userManager.GetUserId(User);
+            PlayerProfile player = _ProfileRepository.FindByCondition(p => p.UserId == userId).First();
+
+            PlayerCash playerCash = new PlayerCash();
+            playerCash.ProfileId = player.Id;
+            playerCash.Balance = _cashRepository
+               .FindByCondition(p => p.ProfileId == player.Id)
+               .OrderByDescending(c => c.CreatedDate)
+               .Select(p => p.Balance)
+               .FirstOrDefault();
 
             //verfiy player has enough currency to purchase order
-            if (total > player.Currency)
+            if (total > playerCash.Balance)
             {
-                return View("InsufficentFundsView",total);
+                return View("InsufficentFundsView", total);
             }
             else
             {
+                PlayerStock PlayerStock = new PlayerStock();
                 PlayerStock.StockSymbol = symbol;
                 PlayerStock.ProfileId = player.Id;
                 PlayerStock.PurchasePrice = _price;
                 PlayerStock.Shares = _shares;
+                _stockRepository.Create(PlayerStock);
 
+                playerCash.Balance -= total;
+                _cashRepository.Create(playerCash);
+
+                PlayerTransaction playerTransaction = new PlayerTransaction();
                 playerTransaction.ProfileId = player.Id;
                 playerTransaction.TransactionType = "Buy";
-                playerTransaction.TransactionDescription = $"Stock Purchase";
+                playerTransaction.TransactionDescription = $"{symbol} Purchased";
                 playerTransaction.Quantity = _shares;
                 playerTransaction.Price = total;
+                _transactionRepository.Create(playerTransaction);
 
-
-                playerTransaction.PrestigeScore = score;
-
-
-                player.PrestigeScore += score;
-                player.Currency -= total;
-
-                _StockRepository.Create(PlayerStock);
-                _TransactionRepository.Create(playerTransaction);
-                _ProfileRepository.Update(player);
-
+                //prestige score is based on P/E Ratio. 
+                PlayerPrestigeScore playerPrestige = new PlayerPrestigeScore();
+                playerPrestige.ProfileId = player.Id;
+                playerPrestige.Source = "Risk Reward";
+                playerPrestige.Score = _prestigescoreRepository
+                .FindByCondition(p => p.ProfileId == player.Id)
+                .OrderByDescending(c => c.CreatedDate)
+                .Select(p => p.Score)
+                .FirstOrDefault();
+                decimal purchaseToPlayerBalanceRatio = total / playerCash.Balance;  //how vested the player is in this stock
+                decimal stockValue = 100 - _peRatio;  //lower P/E Ratio means stock is more valuable
+                playerPrestige.Score += (int)(stockValue * purchaseToPlayerBalanceRatio);
+                _prestigescoreRepository.Create(playerPrestige);
             }
-            return RedirectToAction("Exchange", "stock");
+
+           
+            
+            return RedirectToAction("Portfolio", "stock");
         }
+
+        public IActionResult Sell(string stockId, string value)
+        {
+            var userId = _userManager.GetUserId(User);
+            PlayerProfile player = _ProfileRepository.FindByCondition(p => p.UserId == userId).FirstOrDefault();
+
+
+            PlayerStock playerStock = _stockRepository.FindByCondition(s => s.Id == int.Parse(stockId)).FirstOrDefault();
+            _stockRepository.Delete(playerStock);
+
+
+            PlayerCash playerCash = new PlayerCash();
+            playerCash.ProfileId = player.Id;
+            decimal marketValue = decimal.Parse(value);
+            playerCash.Balance = _cashRepository
+               .FindByCondition(p => p.ProfileId == player.Id)
+               .OrderByDescending(c => c.CreatedDate)
+               .Select(p => p.Balance)
+               .FirstOrDefault();
+            playerCash.Balance += marketValue;
+            _cashRepository.Create(playerCash);
+
+
+            string symbol = playerStock.StockSymbol;
+            int shares = playerStock.Shares;
+            decimal totalCost = (shares * playerStock.PurchasePrice);
+
+            PlayerTransaction playerTransaction = new PlayerTransaction();
+            playerTransaction.ProfileId = player.Id;
+            playerTransaction.TransactionType = "Sell";
+            playerTransaction.TransactionDescription = $"{symbol} Purchased";
+            playerTransaction.Quantity = shares;
+            playerTransaction.Price = marketValue;
+            _transactionRepository.Create(playerTransaction);
+
+
+            PlayerPrestigeScore playerPrestige = new PlayerPrestigeScore();
+            playerPrestige.ProfileId = player.Id;
+            playerPrestige.Source = "Profit Reward";
+            decimal stockReturn = marketValue - totalCost;
+
+            if(stockReturn > 0)
+            {
+                playerPrestige.Score += (int)stockReturn;
+            }
+            _prestigescoreRepository.Create(playerPrestige);
+
+
+           
+            _stockRepository.Delete(playerStock);
+ 
+            return RedirectToAction("Portfolio");
+        }
+
+        public async Task<IActionResult> PortfolioAsync()
+        {
+            var userId = _userManager.GetUserId(User);
+
+            //Retrieves data from database
+            StockPortfolioViewModel stockPortfolioViewModel = new StockPortfolioViewModel();
+            PlayerProfile player = _ProfileRepository.FindByCondition(p => p.UserId == userId).First();
+            stockPortfolioViewModel.PlayProfile = player;
+            IEnumerable<PlayerStock> playerStocks = _stockRepository.FindByCondition(p => p.ProfileId == player.Id);
+
+
+            //Builds API Url from list of stocks the player owns
+            StringBuilder sb = new StringBuilder();
+            sb.Append($@"https://cloud.iexapis.com/stable/stock/market/batch/?types=quote&token={_iexcloudKey}&symbols=");
+
+
+            for (int i = 0; i < playerStocks.Count(); i++)
+            {
+                if (i == playerStocks.Count() - 1)
+                {
+                    sb.Append(playerStocks.ElementAt(i).StockSymbol);
+                }
+                else
+                {
+                    sb.Append(playerStocks.ElementAt(i).StockSymbol + ",");
+                }
+            }
+            _url = sb.ToString();
+
+
+
+
+            //Gets real time stock quote for each stock player owns 
+            var json = await ApiHub.GetJson(_url);
+            var root = JObject.Parse(json);
+            List<StockQuote> stocksApi = new List<StockQuote>();
+            foreach (var r in root)
+            {
+                var stock = JsonConvert.DeserializeObject<StockQuote>(r.Value["quote"].ToString());
+                stocksApi.Add(stock);
+            }
+
+
+            List<PortfolioStock> stocks = new List<PortfolioStock>();
+            foreach (var pStocks in playerStocks)
+            {
+                StockQuote stock = stocksApi.Where(s => s.Symbol == pStocks.StockSymbol).FirstOrDefault();
+                var portfolioStock = new PortfolioStock();
+                portfolioStock.PlayerStockId = pStocks.Id;
+                portfolioStock.Symbol = stock.Symbol;
+                portfolioStock.Name = stock.CompanyName;
+                portfolioStock.CurrentPrice = stock.LatestPrice;
+                portfolioStock.Change = (decimal)stock.Change;
+                portfolioStock.PercentChange = stock.ChangePercent;
+                portfolioStock.Shares = pStocks.Shares;
+                portfolioStock.PurchasePrice = pStocks.PurchasePrice;
+                portfolioStock.PurchaseDate = pStocks.CreatedDate;
+                stocks.Add(portfolioStock);
+            }
+
+            foreach (var stock in stocks)
+            {
+                stockPortfolioViewModel.TotalStockValue += stock.MarketValue;
+                stockPortfolioViewModel.TotalStockCost += stock.TotalCost;
+                stockPortfolioViewModel.TotalTodaysGain += stock.TodaysGain;
+            }
+            stockPortfolioViewModel.Stocks = stocks;
+            return View("Portfolio", stockPortfolioViewModel);
+        }
+
 
 
         public IActionResult Exchange()
         {
-            var userId = _userManager.GetUserId(User);
-            PlayerProfile player = _ProfileRepository.FindByCondition(p => p.UserId == userId).First();
-            return View(player);
+            return View();
+
         }
 
 

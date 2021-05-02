@@ -7,7 +7,7 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using ThatsLife.Models;
 using ThatsLife.Models.DAL;
-
+using ThatsLife.Models.Entity;
 
 namespace ThatsLife
 {
@@ -44,6 +44,8 @@ namespace ThatsLife
             services.AddScoped<IRepository<PlayerProfile>, ProfileRepository>();
             services.AddScoped<IRepository<PlayerStock>, StockRepository>();
             services.AddScoped<IRepository<PlayerTransaction>,TransactionRepository>();
+            services.AddScoped<IRepository<PlayerCash>, CashRepository>();
+            services.AddScoped<IRepository<PlayerPrestigeScore>, PrestigeScoreRepository>();
             services.AddControllersWithViews();
             services.AddRazorPages();
         }

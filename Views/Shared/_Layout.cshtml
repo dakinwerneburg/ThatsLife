@@ -64,31 +64,34 @@
             });
         });
 
-        function Purchase(player,peRatio) {
+        function Purchase(peRatio) {
             var symbolValue = document.getElementById("symbol").innerHTML;
-            var playerValue = player;
             var priceValue = document.getElementById("price").innerHTML;
             var sharesValue = document.getElementById("shares").value;
 
             window.location.href = '@Url.Action("buy","stock")?symbol=' + symbolValue +
-                '&playerId=' + playerValue +
                 '&price=' + priceValue +
                 '&shares=' + sharesValue+
                 '&peRatio=' + peRatio;
         };
 
-        function Confirm () {
+        function ConfirmBuy () {
             var priceValue = document.getElementById("price").innerHTML;
             var sharesValue = document.getElementById("shares").value;
             var total = (sharesValue * priceValue).toLocaleString('en-US', {
                 style: 'currency',
                 currency: 'USD'
             });
-            
-            document.getElementById("confirm-modal-shares").innerHTML = sharesValue;
-            document.getElementById("confirm-modal-total").innerHTML = total;
-            $('#confirm-modal').modal('show')
+
+            document.getElementById("confirmBuy-modal-shares").innerHTML = sharesValue;
+            document.getElementById("confirmBuy-modal-total").innerHTML = total;
+            $('#confirmBuy-modal').modal('show')
         }
+
+
+        function Sell() {
+            document.getElementById("sell-form").submit();
+        };
 
     </script>
     @await RenderSectionAsync("Scripts", required: false)

@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Microsoft.EntityFrameworkCore;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Linq.Expressions;
@@ -22,7 +23,19 @@ namespace ThatsLife.Models.DAL
         public void Delete(PlayerStock entity)
         {
             _Context.Remove(entity);
-            _Context.SaveChanges();
+            while (true)
+                try
+                {
+                    _Context.SaveChanges();
+                    break;
+                }
+                catch (DbUpdateConcurrencyException ex)
+                {
+                    foreach (var entry in ex.Entries)
+                    {
+                        entry.Reload();
+                    }
+                }
         }
 
         public IQueryable<PlayerStock> FindAll()

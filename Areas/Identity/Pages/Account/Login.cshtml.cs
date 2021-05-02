@@ -84,13 +84,7 @@ namespace ThatsLife.Areas.Identity.Pages.Account
                 var result = await _signInManager.PasswordSignInAsync(Input.Email, Input.Password, Input.RememberMe, lockoutOnFailure: false);
                 if (result.Succeeded)
                 {
-
-                    //var user = _userManager.GetUserAsync(HttpContext.User).GetAwaiter().GetResult();
-
-                    //PlayerProfile profile = _ProfileRepository.FindByCondition(p => p.UserId == user.Id).First();
-                    return RedirectToAction("Exchange", "Stock");
-                    //return RedirectToAction("Exchange", "Stock");
-                    //return LocalRedirect(returnUrl);
+                    return LocalRedirect(returnUrl);
                 }
                 if (result.RequiresTwoFactor)
                 {

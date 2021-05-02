@@ -4,6 +4,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using ThatsLife.Models.Entity;
 
 namespace ThatsLife.Models.DAL
 {
@@ -17,9 +18,8 @@ namespace ThatsLife.Models.DAL
         public DbSet<PlayerProfile> PlayerProfiles { get; set; }
         public DbSet<PlayerStock> PlayerStocks { get; set; }
         public DbSet<PlayerTransaction> PlayerTransactions {get;set;}
-
-
-
+        public DbSet<PlayerCash> PlayerCash { get; set; }
+        public DbSet<PlayerPrestigeScore> PlayerPrestigeScores { get; set; }
 
 
         /// <summary>

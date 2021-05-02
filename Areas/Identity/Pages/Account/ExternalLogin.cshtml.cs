@@ -15,6 +15,7 @@ using Microsoft.AspNetCore.WebUtilities;
 using Microsoft.Extensions.Logging;
 using ThatsLife.Models;
 using ThatsLife.Models.DAL;
+using ThatsLife.Models.Entity;
 
 namespace ThatsLife.Areas.Identity.Pages.Account
 {
@@ -23,17 +24,25 @@ namespace ThatsLife.Areas.Identity.Pages.Account
     {
         private readonly SignInManager<IdentityUser> _signInManager;
         private readonly UserManager<IdentityUser> _userManager;
-        private readonly IRepository<PlayerProfile> _ProfileRepository;
+        private readonly IRepository<PlayerProfile> _profileRepository;
+        private readonly IRepository<PlayerCash> _cashRepository;
+        private readonly IRepository<PlayerTransaction> _transactionRepository;
+        private readonly IRepository<PlayerPrestigeScore> _prestigescoreRepository;
 
         public ExternalLoginModel(
+             UserManager<IdentityUser> userManager,
             SignInManager<IdentityUser> signInManager,
-            UserManager<IdentityUser> userManager,
-            IRepository<PlayerProfile> profileRepository)
+           IRepository<PlayerProfile> profileRepository,
+           IRepository<PlayerCash> cashRepository,
+           IRepository<PlayerTransaction> tranactionRepository,
+           IRepository<PlayerPrestigeScore> prestigescoreRepository)
         {
-            _signInManager = signInManager;
             _userManager = userManager;
             _signInManager = signInManager;
-            _ProfileRepository = profileRepository;
+            _profileRepository = profileRepository;
+            _cashRepository = cashRepository;
+            _transactionRepository = tranactionRepository;
+            _prestigescoreRepository = prestigescoreRepository;
         }
 
         [BindProperty]
@@ -85,15 +94,7 @@ namespace ThatsLife.Areas.Identity.Pages.Account
             var result = await _signInManager.ExternalLoginSignInAsync(info.LoginProvider, info.ProviderKey, isPersistent: false, bypassTwoFactor : true);
             if (result.Succeeded)
             {
-          
-                //var user = _userManager.FindByLoginAsync(info.LoginProvider, info.ProviderKey);
-
-                //PlayerProfile profile = _ProfileRepository.FindByCondition(p => p.UserId == user.GetAwaiter().GetResult().Id).First();
-                return RedirectToAction("Exchange", "Stock");
-                //PlayerProfile profile = _ProfileRepository.
-                //PlayerProfile profile = _ProfileRepository.FindByCondition(p => p.UserId == user.Id).First();
-                //return RedirectToAction("Exchange", "Stock", profile);
-               // return RedirectToAction("Exchange", "Stock");
+                return LocalRedirect(returnUrl);
             }
             if (result.IsLockedOut)
             {
@@ -136,20 +137,35 @@ namespace ThatsLife.Areas.Identity.Pages.Account
                     result = await _userManager.AddLoginAsync(user, info);
                     if (result.Succeeded)
                     {
-                        var userId = await _userManager.GetUserIdAsync(user);
-
                         await _signInManager.SignInAsync(user, isPersistent: false, info.LoginProvider);
 
 
-                        PlayerProfile profile = new PlayerProfile();
-                        profile.CreatedDate = DateTime.Now;
-                        profile.Currency = 100000;
-                        profile.PrestigeScore = 0;
-                        profile.ProfileName = Input.Email;
-                        profile.UserId = userId;
-                        _ProfileRepository.Create(profile);
+                        PlayerProfile player = new PlayerProfile();
+                        player.ProfileName = User.Identity.Name;
+                        player.UserId = user.Id;
+                        _profileRepository.Create(player);
+                        player = _profileRepository.FindByCondition(p => p.UserId == user.Id).FirstOrDefault();
 
-                        return RedirectToAction("Exchange", "Stock", profile);
+
+                        PlayerCash playerCash = new PlayerCash();
+                        playerCash.ProfileId = player.Id;
+                        playerCash.Balance = 1000000;
+                        _cashRepository.Create(playerCash);
+
+                        PlayerTransaction playerTransaction = new PlayerTransaction();
+                        playerTransaction.Price = 1000000;
+                        playerTransaction.ProfileId = player.Id;
+                        playerTransaction.TransactionType = "Credit";
+                        playerTransaction.TransactionDescription = "Player Created";
+                        _transactionRepository.Create(playerTransaction);
+
+                        PlayerPrestigeScore playerPrestigeScore = new PlayerPrestigeScore();
+                        playerPrestigeScore.ProfileId = player.Id;
+                        playerPrestigeScore.Score = 0;
+                        playerPrestigeScore.Source = "Player Created";
+                        _prestigescoreRepository.Create(playerPrestigeScore);
+
+                        return LocalRedirect(returnUrl);
                     }
                 }
                 foreach (var error in result.Errors)

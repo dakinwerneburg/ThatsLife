@@ -19,14 +19,14 @@ namespace ThatsLife.Controllers
 
         public IActionResult Index()
         {
-            if (_signInManager.IsSignedIn(User)){
+            if (_signInManager.IsSignedIn(User))
+            {
                 return RedirectToAction("exchange", "stock");
             }
             else
             {
                 return View();
             }
-            
         }
 
         
