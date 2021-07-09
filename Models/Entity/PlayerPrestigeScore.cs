@@ -6,13 +6,14 @@ using System.Threading.Tasks;
 
 namespace ThatsLife.Models.Entity
 {
-    public class PlayerPrestigeScore :BaseEntity
+    public class PlayerPrestigeScore : BaseEntity
     {
         public int Id { get; set; }
 
         [ForeignKey("PlayerProfile")]
         public int? ProfileId { get; set; }
         public int Score { get; set; }
+        public int PointsEarned { get; set; }
         public string Source { get; set; }
     }
 }

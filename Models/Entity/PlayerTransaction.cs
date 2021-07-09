@@ -5,9 +5,9 @@ using System.ComponentModel.DataAnnotations.Schema;
 using System.Linq;
 using System.Threading.Tasks;
 
-namespace ThatsLife.Models.DAL
+namespace ThatsLife.Models.Entity
 {
-    public class PlayerTransaction :BaseEntity
+    public class PlayerTransaction : BaseEntity
     {
         public int Id { get; set; }
 

@@ -47,6 +47,37 @@ namespace ThatsLife.Migrations
                 });
 
             migrationBuilder.CreateTable(
+                name: "Categories",
+                columns: table => new
+                {
+                    Id = table.Column<int>(type: "int", nullable: false)
+                        .Annotation("SqlServer:Identity", "1, 1"),
+                    TriviaDbCategoryId = table.Column<int>(type: "int", nullable: false),
+                    Name = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    CreatedDate = table.Column<DateTime>(type: "datetime2", nullable: false),
+                    UpdatedDate = table.Column<DateTime>(type: "datetime2", nullable: true)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_Categories", x => x.Id);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "Difficulties",
+                columns: table => new
+                {
+                    Id = table.Column<int>(type: "int", nullable: false)
+                        .Annotation("SqlServer:Identity", "1, 1"),
+                    Name = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    CreatedDate = table.Column<DateTime>(type: "datetime2", nullable: false),
+                    UpdatedDate = table.Column<DateTime>(type: "datetime2", nullable: true)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_Difficulties", x => x.Id);
+                });
+
+            migrationBuilder.CreateTable(
                 name: "PlayerCash",
                 columns: table => new
                 {
@@ -70,6 +101,7 @@ namespace ThatsLife.Migrations
                         .Annotation("SqlServer:Identity", "1, 1"),
                     ProfileId = table.Column<int>(type: "int", nullable: true),
                     Score = table.Column<int>(type: "int", nullable: false),
+                    PointsEarned = table.Column<int>(type: "int", nullable: false),
                     Source = table.Column<string>(type: "nvarchar(max)", nullable: true),
                     CreatedDate = table.Column<DateTime>(type: "datetime2", nullable: false),
                     UpdatedDate = table.Column<DateTime>(type: "datetime2", nullable: true)
@@ -132,6 +164,21 @@ namespace ThatsLife.Migrations
                 constraints: table =>
                 {
                     table.PrimaryKey("PK_PlayerTransactions", x => x.Id);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "QuestionTypes",
+                columns: table => new
+                {
+                    Id = table.Column<int>(type: "int", nullable: false)
+                        .Annotation("SqlServer:Identity", "1, 1"),
+                    Name = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    CreatedDate = table.Column<DateTime>(type: "datetime2", nullable: false),
+                    UpdatedDate = table.Column<DateTime>(type: "datetime2", nullable: true)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_QuestionTypes", x => x.Id);
                 });
 
             migrationBuilder.CreateTable(
@@ -240,6 +287,50 @@ namespace ThatsLife.Migrations
                         onDelete: ReferentialAction.Cascade);
                 });
 
+            migrationBuilder.CreateTable(
+                name: "PlayerQuizzes",
+                columns: table => new
+                {
+                    Id = table.Column<int>(type: "int", nullable: false)
+                        .Annotation("SqlServer:Identity", "1, 1"),
+                    PlayerId = table.Column<int>(type: "int", nullable: true),
+                    CategoryId = table.Column<int>(type: "int", nullable: true),
+                    DifficultyId = table.Column<int>(type: "int", nullable: true),
+                    QuestionTypeId = table.Column<int>(type: "int", nullable: true),
+                    Attempted = table.Column<int>(type: "int", nullable: false),
+                    Correct = table.Column<int>(type: "int", nullable: false),
+                    CreatedDate = table.Column<DateTime>(type: "datetime2", nullable: false),
+                    UpdatedDate = table.Column<DateTime>(type: "datetime2", nullable: true)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_PlayerQuizzes", x => x.Id);
+                    table.ForeignKey(
+                        name: "FK_PlayerQuizzes_Categories_CategoryId",
+                        column: x => x.CategoryId,
+                        principalTable: "Categories",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Restrict);
+                    table.ForeignKey(
+                        name: "FK_PlayerQuizzes_Difficulties_DifficultyId",
+                        column: x => x.DifficultyId,
+                        principalTable: "Difficulties",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Restrict);
+                    table.ForeignKey(
+                        name: "FK_PlayerQuizzes_PlayerProfiles_PlayerId",
+                        column: x => x.PlayerId,
+                        principalTable: "PlayerProfiles",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Restrict);
+                    table.ForeignKey(
+                        name: "FK_PlayerQuizzes_QuestionTypes_QuestionTypeId",
+                        column: x => x.QuestionTypeId,
+                        principalTable: "QuestionTypes",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Restrict);
+                });
+
             migrationBuilder.CreateIndex(
                 name: "IX_AspNetRoleClaims_RoleId",
                 table: "AspNetRoleClaims",
@@ -278,6 +369,26 @@ namespace ThatsLife.Migrations
                 column: "NormalizedUserName",
                 unique: true,
                 filter: "[NormalizedUserName] IS NOT NULL");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_PlayerQuizzes_CategoryId",
+                table: "PlayerQuizzes",
+                column: "CategoryId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_PlayerQuizzes_DifficultyId",
+                table: "PlayerQuizzes",
+                column: "DifficultyId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_PlayerQuizzes_PlayerId",
+                table: "PlayerQuizzes",
+                column: "PlayerId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_PlayerQuizzes_QuestionTypeId",
+                table: "PlayerQuizzes",
+                column: "QuestionTypeId");
         }
 
         protected override void Down(MigrationBuilder migrationBuilder)
@@ -304,7 +415,7 @@ namespace ThatsLife.Migrations
                 name: "PlayerPrestigeScores");
 
             migrationBuilder.DropTable(
-                name: "PlayerProfiles");
+                name: "PlayerQuizzes");
 
             migrationBuilder.DropTable(
                 name: "PlayerStocks");
@@ -317,6 +428,18 @@ namespace ThatsLife.Migrations
 
             migrationBuilder.DropTable(
                 name: "AspNetUsers");
+
+            migrationBuilder.DropTable(
+                name: "Categories");
+
+            migrationBuilder.DropTable(
+                name: "Difficulties");
+
+            migrationBuilder.DropTable(
+                name: "PlayerProfiles");
+
+            migrationBuilder.DropTable(
+                name: "QuestionTypes");
         }
     }
 }

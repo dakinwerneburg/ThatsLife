@@ -3,8 +3,9 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Linq.Expressions;
 using System.Threading.Tasks;
+using ThatsLife.Models.DAL;
 
-namespace ThatsLife.Models.DAL
+namespace ThatsLife.Models.Entity
 {
     public class CashRepository : IRepository<PlayerCash>
     {

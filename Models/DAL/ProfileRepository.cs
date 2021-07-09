@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Linq.Expressions;
 using System.Threading.Tasks;
+using ThatsLife.Models.Entity;
 
 namespace ThatsLife.Models.DAL
 {

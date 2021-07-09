@@ -1,6 +1,6 @@
 ﻿@model IEnumerable<ThatsLife.Models.StockQuote>
 
-    <div class="d-none d-block d-block m-2">
+    <div class="d-none d-md-block d-lg-block m-2">
         @if (@Model.First().IsUSMarketOpen)
         {
             <p class="text-success h6 border-bottom">US Markets Open</p>
@@ -15,7 +15,10 @@
             @foreach (var stock in Model)
             {
                 <div class="col border-right border-left">
-                    <div class="font-weight-bolder">@stock.Symbol</div>
+                    <div class="font-weight-bolder">
+                        @stock.Symbol
+                        <span class="float-right font-weight-light">@string.Format("{0:C}", @stock.LatestPrice)</span>
+                    </div>
 
                     @if (@stock.ChangePercent > 0)
                     {
@@ -35,7 +38,7 @@
                         </span>
                     }
 
-                    <span class="float-right">@string.Format("{0:C}", @stock.LatestPrice)</span>
+                    
                 </div>
 
             }

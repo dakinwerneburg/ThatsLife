@@ -48,21 +48,59 @@
                     @RenderBody()
                 </div>
             </div>
-
         }
         @RenderBody()
-        <
     </main>
     <footer>
     </footer>
     <script src="~/lib/jquery/dist/jquery.min.js"></script>
     <script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
     <script>
+
+        
+
+
         $(document).ready(function () {
             $("#sidebar-toggle").on('click', function () {
                 $("#sidebar").toggleClass("active");
             });
         });
+
+        function ValidateQuiz() {
+
+            var type = document.getElementById('type');
+            var radios = $('input:radio');
+            var index = 0;
+            var question = 0;
+
+            for (var i = 0; i < radios.length; i++) {
+                var radio = radios[i];
+
+
+                if (type.value == 'multiple') {
+
+                    index = i % 4;
+                    question = Math.floor((i / 4) + 1);
+                }
+                else {
+                    index = i % 2;
+                    question = Math.floor((i / 2) + 1);
+                }
+
+                var icon = document.getElementById('icon-' + question + '-' + index);
+
+
+                if (radio.value == 'true' && radio.checked == true) {
+                    icon.setAttribute("class", "fas fa-check fa-lg text-success ml-5 pr-3");
+                }
+                else if (radio.value == 'false' && radio.checked == true) {
+                    icon.setAttribute("class", "fas fa-times fa-lg text-danger ml-5 pr-3");
+                }
+            }
+            document.getElementById('submit').setAttribute("class", "btn btn-lg btn-secondary mt-5 d-none");
+            document.getElementById('continue').setAttribute("class", "btn btn-lg btn-success mt-5");
+    }
 
         function Purchase(peRatio) {
             var symbolValue = document.getElementById("symbol").innerHTML;

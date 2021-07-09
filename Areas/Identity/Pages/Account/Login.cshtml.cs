@@ -13,6 +13,7 @@ using Microsoft.AspNetCore.Mvc.RazorPages;
 using Microsoft.Extensions.Logging;
 using ThatsLife.Models;
 using ThatsLife.Models.DAL;
+using ThatsLife.Models.Entity;
 
 namespace ThatsLife.Areas.Identity.Pages.Account
 {

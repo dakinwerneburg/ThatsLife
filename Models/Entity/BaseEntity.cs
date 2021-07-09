@@ -1,7 +1,7 @@
 ﻿using System;
 using System.ComponentModel.DataAnnotations;
 
-namespace ThatsLife.Models
+namespace ThatsLife.Models.Entity
 {
     public class BaseEntity
     {

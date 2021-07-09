@@ -1,27 +1,41 @@
 ﻿@model IEnumerable<ThatsLife.Models.StockQuote>
 
-<div class="border shadow-lg gain-decline p-4 mr-md-5">
+@{
+    if (!Model.Any())
+    {
+    <div class="border shadow-lg gain-decline p-4 mr-md-5">
+        <p>Markets are opening.  Please try back shortly</p>
+    </div>
+    }
+    else
+    {
+    <div class="border shadow-lg gain-decline p-4 mr-md-5 table-responsive-sm">
 
-    <p class="pb-4"><b class="pr-4">DECLINERS</b> @Model.First().LatesUpdateDT EST<p>
-        <table class="table">
-            <tr class="font-bold text-secondary">
-                <th>SYMBOL</th>
-                <th>NAME</th>
-                <th class="text-right">LAST</th>
-                <th class="text-right">CHANGE</th>
-                <th class="text-right">CHANGE PERCENTAGE</th>
+        <p class="pb-4"><b class="pr-4">DECLINERS</b> @Model.First().LatesUpdateDT EST<p>
+            <table class="table">
+                <thead>
+                    <tr scope="row" class="font-bold text-secondary">
+                        <th scope="col">SYMBOL</th>
+                        <th scope="col">NAME</th>
+                        <th scope="col" class="text-right">LAST</th>
+                        <th scope="col" class="text-right">CHANGE</th>
+                        <th scope="col" class="text-right">CHANGE PERCENTAGE</th>
 
-            </tr>
-            @foreach (var stock in Model)
-            {
-                <tr>
-                    <td><i class="fas fa-caret-down stock-down"></i> @stock.Symbol</td>
-                    <td>@stock.CompanyName</td>
-                    <td class="text-right">@stock.LatestPrice.ToString("c")</td>
-                    <td class="stock-down text-right">@stock.Change.ToString("0.00")</td>
-                    <td class="stock-down text-right">@stock.ChangePercent.ToString("p")</td>
-                </tr>
-            }
-
-        </table>
-</div>
+                    </tr>
+                </thead>
+                <tbody>
+                    @foreach (var stock in Model)
+                    {
+                        <tr scope="row">
+                            <td><i class="fas fa-caret-down stock-down"></i> @stock.Symbol</td>
+                            <td>@stock.CompanyName</td>
+                            <td class="text-right">@stock.LatestPrice.ToString("c")</td>
+                            <td class="stock-down text-right">@stock.Change.ToString("0.00")</td>
+                            <td class="stock-down text-right">@stock.ChangePercent.ToString("p")</td>
+                        </tr>
+                    }
+                </tbody>
+            </table>
+    </div>
+        }
+    }

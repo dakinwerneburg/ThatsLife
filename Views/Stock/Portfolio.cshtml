@@ -3,7 +3,8 @@
 
 
     <div class="row m-2 w-100 p-3 ">
-        <div class="@Model.TotalReturn > 0? col bg-success text-white shadow mx-2  p-3 : col bg-danger text-white shadow mx-2 p-3">
+  
+        <div class="@(Model.TotalTodaysGain > 0 ? "col bg-success text-white shadow mx-2  p-3" : "col bg-danger text-white shadow mx-2 p-3")">
             <div class="row">
                 <div class="col">
                     <div class="font-weight-bolder"> @Model.TotalTodaysGain.ToString("c")</div>
@@ -14,7 +15,7 @@
                 </div>
             </div>
         </div>
-        <div class="@Model.TotalReturn > 0? col ml-2 bg-success text-white shadow mx-2 p-3: col ml-2 bg-danger text-white shadow mx-2 p-3">
+        <div class="@(Model.TotalReturn > 0 ? "col ml-2 bg-success text-white shadow mx-2 p-3": "col ml-2 bg-danger text-white shadow mx-2 p-3")">
             <div class="row">
                 <div class="col">
                     <div class="font-weight-bolder">@Model.TotalReturn.ToString("c")</div>
@@ -49,56 +50,98 @@
             <div><p class="pb-4 h5">My portfolio<p></div>
             <div class="table-responsive-sm">
                 <table class="table table-striped">
-                    <thead>
-                        <tr scope="row" class="font-weight-bold">
-                            <th>Symbol</th>
-                            <th>Name</th>
-                            <th scope="col" class="text-right font-weight-bold">Price</th>
-                            <th scope="col" class="text-right font-weight-bold">Change</th>
-                            <th scope="col" class="text-right font-weight-bold">% Change</th>
-                            <th scope="col" class="text-right font-weight-bold">Shares</th>
-                            <th scope="col" class="text-right font-weight-bold">Purchase Price</th>
-                            <th scope="col" class="text-right font-weight-bold">Purchase Date</th>
-                            <th scope="col" class="text-right font-weight-bold">Total Cost</th>
-                            <th scope="col" class="text-right font-weight-bold">MarketValue</th>
-                            <th scope="col" class="text-right font-weight-bold">Gain</th>
-                            <th scope="col" class="text-right font-weight-bold">Day's Gain</th>
-                            <th scope="col" class="text-right font-weight-bold">Return</th>
-                            <th scope="col" class="text-right font-weight-bold"></th>
+                    @if (Model.Stocks != null)
+                    {
+                        <thead>
+                            <tr scope="row" class="font-weight-bold">
+                                <th>Symbol</th>
+                                <th>Name</th>
+                                <th scope="col" class="text-right font-weight-bold">Price</th>
+                                <th scope="col" class="text-right font-weight-bold">Change</th>
+                                <th scope="col" class="text-right font-weight-bold">% Change</th>
+                                <th scope="col" class="text-right font-weight-bold">Shares</th>
+                                <th scope="col" class="text-right font-weight-bold">Purchase Price</th>
+                                <th scope="col" class="text-right font-weight-bold">Purchase Date</th>
+                                <th scope="col" class="text-right font-weight-bold">Total Cost</th>
+                                <th scope="col" class="text-right font-weight-bold">MarketValue</th>
+                                <th scope="col" class="text-right font-weight-bold">Gain</th>
+                                <th scope="col" class="text-right font-weight-bold">Day's Gain</th>
+                                <th scope="col" class="text-right font-weight-bold">Return</th>
+                                <th scope="col" class="text-right font-weight-bold"></th>
+                            </tr>
+                        </thead>
+                        <tbody>
 
-                        </tr>
-                    </thead>
-                    <tbody>
-                        @foreach (var stock in Model.Stocks)
-                        {
-                      
-                        <tr>
-                            <th class="d-none" id="@stock.PlayerStockId"></th>
-                            <th scope="row" class="font-weight-bold">@stock.Symbol</th>
-                            <td class="font-weight-bold">@stock.Name</td>
-                            <td class="text-right">@stock.CurrentPrice.ToString("c")</td>
-                            <td class="@(stock.Change < 0 ? "text-right text-danger font-weight-bold" : "text-right text-success font-weight-bold")">@stock.Change.ToString("0.00")</td>
-                            <td class="@(stock.PercentChange < 0 ? "text-right text-danger font-weight-bold" : "text-right text-success font-weight-bold")">@stock.PercentChange.ToString("p")</td>
-                            <td class="text-right">@stock.Shares</td>
-                            <td class="text-right">@stock.PurchasePrice.ToString("c")</td>
-                            <td class="text-right">@stock.PurchaseDate</td>
-                            <td class="text-right">@stock.TotalCost.ToString("c")</td>
-                            <td class="text-right">@stock.MarketValue.ToString("c")</td>
-                            <td class="@(stock.Gain < 0 ? "text-right text-danger font-weight-bold" : "text-right")">@stock.Gain.ToString("c")</td>
-                            <td class="@(stock.TodaysGain < 0 ? "text-right text-danger font-weight-bold" : "text-right")">@stock.TodaysGain.ToString("c")</td>
-                            <td class="@(stock.Return < 0 ? "text-right text-danger font-weight-bold" : "text-right")">@stock.Return.ToString("p")</td>
-                            <td>
-                                <form asp-action="sell" method="post" id="sell-form">
-                                    <input type="hidden" name="stockId" value="@stock.PlayerStockId" />
-                                    <input type="hidden" name="value" value="@stock.MarketValue" />
-                                    <button type="submit" class="btn btn-primary" data-toggle="modal" data-target="#">Sell</button>
-                                </form>
-                            </td>
+                            @foreach (var stock in Model.Stocks)
+                            {
 
-                        </tr>
-                        }
-                    </tbody>
-                    </table>
+                                <tr>
+                                    <th class="d-none" id="@stock.PlayerStockId"></th>
+                                    <th scope="row" class="font-weight-bold">@stock.Symbol</th>
+                                    <td class="font-weight-bold">@stock.Name</td>
+                                    <td class="text-right">@stock.CurrentPrice.ToString("c")</td>
+                                    <td class="@(stock.Change < 0 ? "text-right text-danger font-weight-bold" : "text-right text-success font-weight-bold")">@stock.Change.ToString("0.00")</td>
+                                    <td class="@(stock.PercentChange < 0 ? "text-right text-danger font-weight-bold" : "text-right text-success font-weight-bold")">@stock.PercentChange.ToString("p")</td>
+                                    <td class="text-right">@stock.Shares</td>
+                                    <td class="text-right">@stock.PurchasePrice.ToString("c")</td>
+                                    <td class="text-right">@stock.PurchaseDate</td>
+                                    <td class="text-right">@stock.TotalCost.ToString("c")</td>
+                                    <td class="text-right">@stock.MarketValue.ToString("c")</td>
+                                    <td class="@(stock.Gain < 0 ? "text-right text-danger font-weight-bold" : "text-right")">@stock.Gain.ToString("c")</td>
+                                    <td class="@(stock.TodaysGain < 0 ? "text-right text-danger font-weight-bold" : "text-right")">@stock.TodaysGain.ToString("c")</td>
+                                    <td class="@(stock.Return < 0 ? "text-right text-danger font-weight-bold" : "text-right")">@stock.Return.ToString("p")</td>
+                                    <td>
+                                        <form asp-action="sell" method="post" id="sell-form">
+                                            <input type="hidden" name="stockId" value="@stock.PlayerStockId" />
+                                            <input type="hidden" name="value" value="@stock.MarketValue" />
+                                            <button type="submit" class="btn btn-primary" data-toggle="modal" data-target="#">Sell</button>
+                                        </form>
+                                    </td>
+                                </tr>
+                            }
+                        </tbody>
+                    }
+                    else
+                    {
+                        <thead>
+                            <tr scope="row" class="font-weight-bold">
+                                <th>Symbol</th>
+                                <th>Name</th>
+                                <th scope="col" class="text-right font-weight-bold">Price</th>
+                                <th scope="col" class="text-right font-weight-bold">Change</th>
+                                <th scope="col" class="text-right font-weight-bold">% Change</th>
+                                <th scope="col" class="text-right font-weight-bold">Shares</th>
+                                <th scope="col" class="text-right font-weight-bold">Purchase Price</th>
+                                <th scope="col" class="text-right font-weight-bold">Purchase Date</th>
+                                <th scope="col" class="text-right font-weight-bold">Total Cost</th>
+                                <th scope="col" class="text-right font-weight-bold">MarketValue</th>
+                                <th scope="col" class="text-right font-weight-bold">Gain</th>
+                                <th scope="col" class="text-right font-weight-bold">Day's Gain</th>
+                                <th scope="col" class="text-right font-weight-bold">Return</th>
+                                <th scope="col" class="text-right font-weight-bold"></th>
+
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <th class="d-none" id="null"></th>
+                                <th scope="row" class="font-weight-bold"></th>
+                                <td class="font-weight-bold"></td>
+                                <td class="text-right"></td>
+                                <td class="text-right"></td>
+                                <td class="text-right"></td>
+                                <td class="text-right"></td>
+                                <td class="text-right"></td>
+                                <td class="text-right"></td>
+                                <td class="text-right"></td>
+                                <td class="text-right"></td>
+                                <td class="text-right"></td>
+                                <td class="text-right"></td>
+                                <td class="text-right"></td>
+                            </tr>
+                        </tbody>
+                    }
+                </table>
             </div>
         </div>
     </div>

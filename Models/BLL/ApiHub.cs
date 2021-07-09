@@ -15,12 +15,12 @@ namespace ThatsLife.Models
     public static class ApiHub
     {
         public static HttpClient client { get; set; }
-
         public static void InitializeClient()
         {
             client = new HttpClient();
             client.DefaultRequestHeaders.Accept.Clear();
             client.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue("application/json"));
+
         }
 
 
@@ -40,6 +40,7 @@ namespace ThatsLife.Models
             }
             return json;
         }
+      
     }
 }
 

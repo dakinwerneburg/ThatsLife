@@ -5,9 +5,9 @@ using System.ComponentModel.DataAnnotations.Schema;
 using System.Linq;
 using System.Threading.Tasks;
 
-namespace ThatsLife.Models
+namespace ThatsLife.Models.Entity
 {
-    public class PlayerCash :BaseEntity
+    public class PlayerCash : BaseEntity
     {
         public int Id { get; set; }
 

@@ -19,11 +19,12 @@ namespace ThatsLife.Models
         public decimal TotalCost { get { return PurchasePrice * Shares; } set { } }
         public decimal MarketValue { get { return CurrentPrice * Shares; } set { } }
 
+        
         public decimal TodaysGain 
         { 
             get 
             { 
-                if(PurchasePrice - CurrentPrice == 0)
+                if(PurchasePrice == CurrentPrice)
                 {
                     return 0;
                 }

@@ -27,8 +27,6 @@ namespace ThatsLife.Controllers
         private readonly IConfiguration _configuration;
         private string _url;
         private string _iexcloudKey;
-        //private StockQuote stockQuote;
-
 
         public StockController(SignInManager<IdentityUser> signInManager,
                        UserManager<IdentityUser> userManager,
@@ -99,7 +97,7 @@ namespace ThatsLife.Controllers
 
             decimal _price = decimal.Parse(price);
             int _shares = int.Parse(shares);
-            decimal _peRatio = decimal.Parse(peRatio);
+            decimal _peRatio = decimal.Parse(peRatio?? "0");
             decimal total = _price * _shares;
 
             var userId = _userManager.GetUserId(User);
@@ -148,8 +146,9 @@ namespace ThatsLife.Controllers
                 .Select(p => p.Score)
                 .FirstOrDefault();
                 decimal purchaseToPlayerBalanceRatio = total / playerCash.Balance;  //how vested the player is in this stock
-                decimal stockValue = 100 - _peRatio;  //lower P/E Ratio means stock is more valuable
+                decimal stockValue = 1000 - _peRatio;  //lower P/E Ratio means stock is more valuable
                 playerPrestige.Score += (int)(stockValue * purchaseToPlayerBalanceRatio);
+                playerPrestige.PointsEarned = (int)(stockValue * purchaseToPlayerBalanceRatio);
                 _prestigescoreRepository.Create(playerPrestige);
             }
 
@@ -197,10 +196,15 @@ namespace ThatsLife.Controllers
             playerPrestige.ProfileId = player.Id;
             playerPrestige.Source = "Profit Reward";
             decimal stockReturn = marketValue - totalCost;
-
-            if(stockReturn > 0)
+            playerPrestige.Score = _prestigescoreRepository
+                .FindByCondition(p => p.ProfileId == player.Id)
+                .OrderByDescending(c => c.CreatedDate)
+                .Select(p => p.Score)
+                .FirstOrDefault();
+            if (stockReturn > 0)
             {
                 playerPrestige.Score += (int)stockReturn;
+                playerPrestige.PointsEarned = (int)stockReturn;
             }
             _prestigescoreRepository.Create(playerPrestige);
 
@@ -221,63 +225,67 @@ namespace ThatsLife.Controllers
             stockPortfolioViewModel.PlayProfile = player;
             IEnumerable<PlayerStock> playerStocks = _stockRepository.FindByCondition(p => p.ProfileId == player.Id);
 
-
-            //Builds API Url from list of stocks the player owns
-            StringBuilder sb = new StringBuilder();
-            sb.Append($@"https://cloud.iexapis.com/stable/stock/market/batch/?types=quote&token={_iexcloudKey}&symbols=");
-
-
-            for (int i = 0; i < playerStocks.Count(); i++)
+            if (playerStocks.Any())
             {
-                if (i == playerStocks.Count() - 1)
+                //Builds API Url from list of stocks the player owns
+                StringBuilder sb = new StringBuilder();
+                sb.Append($@"https://cloud.iexapis.com/stable/stock/market/batch/?types=quote&token={_iexcloudKey}&symbols=");
+
+
+                for (int i = 0; i < playerStocks.Count(); i++)
                 {
-                    sb.Append(playerStocks.ElementAt(i).StockSymbol);
+                    if (i == playerStocks.Count() - 1)
+                    {
+                        sb.Append(playerStocks.ElementAt(i).StockSymbol);
+                    }
+                    else
+                    {
+                        sb.Append(playerStocks.ElementAt(i).StockSymbol + ",");
+                    }
                 }
-                else
+                _url = sb.ToString();
+
+
+
+
+                //Gets real time stock quote for each stock player owns 
+                var json = await ApiHub.GetJson(_url);
+                var root = JObject.Parse(json);
+                List<StockQuote> stocksApi = new List<StockQuote>();
+                foreach (var r in root)
                 {
-                    sb.Append(playerStocks.ElementAt(i).StockSymbol + ",");
+                    var stock = JsonConvert.DeserializeObject<StockQuote>(r.Value["quote"].ToString());
+                    stocksApi.Add(stock);
                 }
-            }
-            _url = sb.ToString();
 
 
+                List<PortfolioStock> stocks = new List<PortfolioStock>();
+                foreach (var pStocks in playerStocks)
+                {
+                    StockQuote stock = stocksApi.Where(s => s.Symbol == pStocks.StockSymbol).FirstOrDefault();
+                    var portfolioStock = new PortfolioStock();
+                    portfolioStock.PlayerStockId = pStocks.Id;
+                    portfolioStock.Symbol = stock.Symbol;
+                    portfolioStock.Name = stock.CompanyName;
+                    portfolioStock.CurrentPrice = stock.LatestPrice;
+                    portfolioStock.Change = (decimal)stock.Change;
+                    portfolioStock.PercentChange = stock.ChangePercent;
+                    portfolioStock.Shares = pStocks.Shares;
+                    portfolioStock.PurchasePrice = pStocks.PurchasePrice;
+                    portfolioStock.PurchaseDate = pStocks.CreatedDate;
+                    stocks.Add(portfolioStock);
+                }
 
-
-            //Gets real time stock quote for each stock player owns 
-            var json = await ApiHub.GetJson(_url);
-            var root = JObject.Parse(json);
-            List<StockQuote> stocksApi = new List<StockQuote>();
-            foreach (var r in root)
-            {
-                var stock = JsonConvert.DeserializeObject<StockQuote>(r.Value["quote"].ToString());
-                stocksApi.Add(stock);
-            }
-
-
-            List<PortfolioStock> stocks = new List<PortfolioStock>();
-            foreach (var pStocks in playerStocks)
-            {
-                StockQuote stock = stocksApi.Where(s => s.Symbol == pStocks.StockSymbol).FirstOrDefault();
-                var portfolioStock = new PortfolioStock();
-                portfolioStock.PlayerStockId = pStocks.Id;
-                portfolioStock.Symbol = stock.Symbol;
-                portfolioStock.Name = stock.CompanyName;
-                portfolioStock.CurrentPrice = stock.LatestPrice;
-                portfolioStock.Change = (decimal)stock.Change;
-                portfolioStock.PercentChange = stock.ChangePercent;
-                portfolioStock.Shares = pStocks.Shares;
-                portfolioStock.PurchasePrice = pStocks.PurchasePrice;
-                portfolioStock.PurchaseDate = pStocks.CreatedDate;
-                stocks.Add(portfolioStock);
+                foreach (var stock in stocks)
+                {
+                    stockPortfolioViewModel.TotalStockValue += stock.MarketValue;
+                    stockPortfolioViewModel.TotalStockCost += stock.TotalCost;
+                    stockPortfolioViewModel.TotalTodaysGain += stock.TodaysGain;
+                }
+                stockPortfolioViewModel.Stocks = stocks;
+                
             }
 
-            foreach (var stock in stocks)
-            {
-                stockPortfolioViewModel.TotalStockValue += stock.MarketValue;
-                stockPortfolioViewModel.TotalStockCost += stock.TotalCost;
-                stockPortfolioViewModel.TotalTodaysGain += stock.TodaysGain;
-            }
-            stockPortfolioViewModel.Stocks = stocks;
             return View("Portfolio", stockPortfolioViewModel);
         }
 

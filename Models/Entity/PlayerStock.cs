@@ -4,13 +4,14 @@ using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 using System.Linq;
 using System.Threading.Tasks;
+using ThatsLife.Models.Entity;
 
 namespace ThatsLife.Models
 {
-    public class PlayerStock: BaseEntity
+    public class PlayerStock : BaseEntity
     {
         public int Id { get; set; }
-        
+
         [Required]
         public string StockSymbol { get; set; }
 

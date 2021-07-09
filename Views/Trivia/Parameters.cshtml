@@ -1,0 +1,49 @@
+﻿@model ThatsLife.Models.ViewModels.TriviaParametersViewModel
+
+
+
+<div class="container-fluid">
+    <div class="row">
+        
+        <div class="col-4 offset-1 mt-5 ">
+            <h3 class="my-5">Make your selection to begin your quiz</h3>
+            <form asp-action="questions">
+                <div class="form-group">
+                    <input type="text" name="NumberOfQuestions" id="NumberOfQuestions" class="form-control form-control-lg mb-5" placeholder="Number of Questions [1-50]" />
+                    <select asp-for="CategoryId" asp-items="@Model.Categories" class="form-control form-control-lg mb-5">
+                        <option>Category</option>
+                    </select>
+                    <select asp-for="Difficulty" asp-items="@Model.Difficulies" class="form-control form-control-lg mb-5">
+                        <option>Difficulty</option>
+                    </select>
+                    <select asp-for="QuestionType" asp-items="@Model.TypeList" class="form-control form-control-lg">
+                        <option>Type</option>
+                    </select>
+                </div>
+                <button type="submit" class="btn btn-primary btn-lg mt-5">Begin Quiz</button>
+            </form>
+
+        </div>
+        <div class="col-4 ml-5 ">
+            <div class="h1 my-5">
+                Earn Virtual Currency By Answering Questions!
+            </div>
+            <div class="trivia-param">
+                The objective is to earn cash to continue investing.  There are various categories to choose from.  There are three levels of difficulty (easy, medium, hard).  There are two types of questions (multiple choice, or true/false).  For multiple choice there are four choices.
+            </div>
+            <div class="ml-2 index-text">
+                <div class="mt-5 font-weight-bold">
+                    Total earned = $10 for every queston x  level of difficulty.  Multiple Choice earns you double.
+                </div>
+                 <div class="">
+                    <div>
+                        Example1: 10 easy multiple choice questions = $10 x 1 x 2 = $200
+                    </div>
+                    <div class="mb-5">
+                        Example2: 10 hard true/false questions = $10 x 3  = $300
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

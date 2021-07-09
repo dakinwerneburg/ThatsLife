@@ -21,6 +21,12 @@ namespace ThatsLife.Models.DAL
         public DbSet<PlayerCash> PlayerCash { get; set; }
         public DbSet<PlayerPrestigeScore> PlayerPrestigeScores { get; set; }
 
+        public DbSet<Category> Categories { get; set; }
+        public DbSet<Difficulty> Difficulties { get; set; }
+        public DbSet<QuestionType> QuestionTypes { get; set; }
+        public DbSet<PlayerQuiz> PlayerQuizzes { get; set; }
+
+
 
         /// <summary>
         /// Adds functionality to automatically add dates when a record is created or updated.

@@ -5,7 +5,7 @@ using System.ComponentModel.DataAnnotations.Schema;
 using System.Linq;
 using System.Threading.Tasks;
 
-namespace ThatsLife.Models
+namespace ThatsLife.Models.Entity
 {
     public class PlayerProfile : BaseEntity
     {

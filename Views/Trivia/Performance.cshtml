@@ -1,0 +1,55 @@
+﻿
+@model ThatsLife.Models.ViewModels.TriviaPerformanceViewModel;
+
+<div class="row border shadow m-2 w-100 p-4">
+    <div class="col ml-5"> @await Component.InvokeAsync("TriviaOverall")</div>
+    <div class="col align-self-center">
+        @{ 
+            var percentCorrect =  Model.TotalAttempted == 0 ? 0.0 : Model.TotalCorrect / (double)Model.TotalAttempted;
+                <div class="h3">
+                    Overall Performance : @percentCorrect.ToString("p")
+                </div>
+        <div>
+            <span>Total Correct: @Model.TotalCorrect</span>
+            <span></span>
+        </div>
+        <div>
+            <span>Total Incorrect: </span>@Model.TotalIncorrect
+        </div>
+        }
+    </div>
+    
+</div>
+
+<div class=" row border shadow m-2 w-100 p-3">
+
+    <div class="col">
+        <div><p class="pb-4 h1">Past Quizes<p></div>
+        <div class="table-responsive-sm">
+            <table class="table table-striped">
+                <thead>
+                    <tr scope="row" class="font-weight-bold">
+                        <th scope="col">Date Taken</th>
+                        <th scope="col">Attempted</th>
+                        <th scope="col">Incorrect</th>
+                        <th scope="col">Correct</th>
+                        <th scope="col">Percent Correct</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @foreach (var quiz in Model.Quizes)
+                    {
+                        var percentage = quiz.Attempted == 0 ? 0.0 : (quiz.Correct / (double)quiz.Attempted);
+                        <tr>
+                            <th scope="row">@quiz.CreatedDate</th>
+                            <td>@quiz.Attempted</td>
+                            <td>@(quiz.Attempted - quiz.Correct)</td>
+                            <td>@quiz.Correct</td>
+                            <td>@percentage.ToString("p")</td>
+                        </tr>
+                    }
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>

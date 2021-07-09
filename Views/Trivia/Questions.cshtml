@@ -1,0 +1,81 @@
+﻿@model ThatsLife.Models.ViewModels.TriviaQuestionsViewModel;
+@{ if (!Model.Questions.Results.Any())
+    {
+         <div class="row">
+            <div class="col border shadow m-5 p-5">
+
+                <div class="card-body">
+                    <h5 class="card-title"><i class="fas fa-exclamation fa-lg text-info m-5" style="font-size:36px;"></i>Sorry</h5>
+                    <p class="card-text">Questions are obtained from TriviaDB and there currently are not questions that meet your critera.</p>
+                    <a asp-action="parameters" class="btn btn-primary">Go Back</a>
+                </div>
+            </div>
+        </div>
+    }
+    else
+    {
+        var category = "";
+        var difficulty = "";
+        var type = "";
+        <form asp-controller="trivia" asp-action="results" class="m-5 pl-2">
+            @{
+                int questionNumber = 1;
+                foreach (var item in Model.Questions.Results)
+                {
+                    difficulty = item.Difficulty;
+                    category = item.Category;
+                    type = item.Type;
+
+                    <input type="hidden" asp-for="@Model.Questions.Results[questionNumber-1].Category" value="@category" />
+                    <input type="hidden" asp-for="@Model.Questions.Results[questionNumber-1].Difficulty" value="@difficulty" />
+                    <input type="hidden" asp-for="@Model.Questions.Results[questionNumber-1].Type" id="type" value="@type" />
+
+                    <div class="mt-5">
+
+                        <div class="mb-3"><span class="pr-4">@questionNumber.</span>@System.Net.WebUtility.HtmlDecode(@item.Question) </div>
+
+                        @{
+                            int choiceNumber = 0;
+                            foreach (var choice in item.Choices)
+                            {
+                                <div class="form-check pl-4 py-1">
+                                    @if (item.Correct_answer == choice)
+                                    {
+
+                                        <input class="ml-2" type="radio" asp-for="@Model.Questions.Results[questionNumber-1].Selected" id="radio-@(questionNumber)-@(choiceNumber)" value="true">
+                                        <label class="pl-3">
+                                            @System.Net.WebUtility.HtmlDecode(choice)
+                                            <i id="icon-@(questionNumber)-@(choiceNumber)" class="d-none ml-5">
+                                                <e class="ml-3 font-weight-light">Correct!</e>
+                                            </i>
+                                        </label>
+
+                                    }
+                                    else
+                                    {
+
+                                        <input class="ml-2" type="radio" asp-for="@Model.Questions.Results[questionNumber-1].Selected" id="radio-@(questionNumber)-@(choiceNumber)" value="false">
+                                        <label class="pl-3">
+                                            @System.Net.WebUtility.HtmlDecode(choice)
+                                            <i id="icon-@(questionNumber)-@(choiceNumber)" class="d-none ml-5 ">
+                                                <e class="ml-3 font-weight-light">Incorrect!</e>
+                                            </i>
+                                        </label>
+
+                                    }
+                                </div>
+                                choiceNumber++;
+                            }
+                        }
+
+
+                    </div>
+                    questionNumber++;
+                }
+            }
+
+            <button id="submit" type="button" class="btn btn-lg btn-secondary mt-5" onclick="ValidateQuiz()">Submit</button>
+            <button id="continue" type="submit" class="btn btn-lg btn-secondary mt-5 d-none">Continue</button>
+        </form>
+    }
+}

@@ -19,7 +19,10 @@
     color: #F8F8F8;
 }
 
-
+.trivia-param{
+    line-height: 3rem;
+    font-size: 20px;
+}
 
 .index-text {
     line-height: 2em;

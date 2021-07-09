@@ -87,7 +87,7 @@ namespace ThatsLife.Areas.Identity.Pages.Account
 
                     //Creates player after they are authenticated and not in database
                     PlayerProfile player = new PlayerProfile();
-                    player.ProfileName = User.Identity.Name;
+                    player.ProfileName = Input.Email;
                     player.UserId = user.Id;
                     _profileRepository.Create(player);
                     player = _profileRepository.FindByCondition(p => p.UserId == user.Id).FirstOrDefault();

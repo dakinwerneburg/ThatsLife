@@ -1,0 +1,300 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<ClassDiagram MajorVersion="1" MinorVersion="1">
+  <Class Name="ThatsLife.Controllers.HomeController">
+    <Position X="10" Y="9.75" Width="3.25" />
+    <Members>
+      <Method Name="HomeController" Hidden="true" />
+    </Members>
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAEAAABAAAAAAAAAAAAAAAEAAAAAAAA=</HashCode>
+      <FileName>Controllers\HomeController.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="ThatsLife.Controllers.AchievementController">
+    <Position X="0.75" Y="9.75" Width="2.25" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAIAAABAAAAAAAAAAAAACAAAAAAAAAA=</HashCode>
+      <FileName>Controllers\AchievementController.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="ThatsLife.Controllers.StockController">
+    <Position X="7" Y="9.75" Width="2.25" />
+    <TypeIdentifier>
+      <HashCode>AAIARAAAgAAAAEAAQAAgAAAAAAQCAAIAAgkQAAAAAAA=</HashCode>
+      <FileName>Controllers\StockController.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="ThatsLife.Controllers.TriviaController">
+    <Position X="3.75" Y="9.75" Width="2.5" />
+    <TypeIdentifier>
+      <HashCode>AAAABAAAgAAAAIYAAABgAAAACAAAABACCIACAAAAAAA=</HashCode>
+      <FileName>Controllers\TriviaController.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="ThatsLife.Models.ApiHub">
+    <Position X="31" Y="0.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAgAAAAAAAAAAAAgAAAAAAAABAAAAAA=</HashCode>
+      <FileName>Models\BLL\ApiHub.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="ThatsLife.Models.DAL.CategorySeedData" Collapsed="true">
+    <Position X="3.5" Y="3.75" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAAAAAACAAAAAAAAAAAA=</HashCode>
+      <FileName>Models\DAL\SeedData\CategorySeedData.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="ThatsLife.Models.DAL.SeedData.DifficultySeedData" Collapsed="true">
+    <Position X="3.5" Y="4.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAAAAAACAAAAAAAAAAAA=</HashCode>
+      <FileName>Models\DAL\SeedData\DifficultySeedData.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="ThatsLife.Models.DAL.SeedData.QuestionTypeSeedData" Collapsed="true">
+    <Position X="3.5" Y="5.25" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAAAAAACAAAAAAAAAAAA=</HashCode>
+      <FileName>Models\DAL\SeedData\QuestionTypeSeedData.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="ThatsLife.Models.DAL.ApplicationDbContext" Collapsed="true">
+    <Position X="7.25" Y="1.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>gAIAAAAAAAAAIAgAAAEAIAAAAAAAMAAAAAAAAAAAABg=</HashCode>
+      <FileName>Models\DAL\ApplicationDbContext.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="ThatsLife.Models.Entity.CashRepository">
+    <Position X="7.5" Y="3" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AARAAAAAAAAAEAAAAAAQAAAAAAEAAEAAAAAAAAAAAAA=</HashCode>
+      <FileName>Models\DAL\CashRepository.cs</FileName>
+    </TypeIdentifier>
+    <ShowAsAssociation>
+      <Field Name="_Context" />
+    </ShowAsAssociation>
+    <Lollipop Position="0.2" />
+  </Class>
+  <Class Name="ThatsLife.Models.DAL.CategoryRepository" Collapsed="true">
+    <Position X="5.25" Y="3.75" Width="1.75" />
+    <TypeIdentifier>
+      <HashCode>AARAAAAAAAAAEAAAAAAQAAAAAAEAAEAAAAAAAAAAAAA=</HashCode>
+      <FileName>Models\DAL\CategoryRepository.cs</FileName>
+    </TypeIdentifier>
+    <Lollipop Position="0.2" />
+  </Class>
+  <Class Name="ThatsLife.Models.DAL.DifficultyRepository" Collapsed="true">
+    <Position X="5.25" Y="4.5" Width="1.75" />
+    <TypeIdentifier>
+      <HashCode>AARAAAAAAAAAEAAAAAAQAAAAAAEAAEAAAAAAAAAAAAA=</HashCode>
+      <FileName>Models\DAL\DifficultyRepository.cs</FileName>
+    </TypeIdentifier>
+    <Lollipop Position="0.2" />
+  </Class>
+  <Class Name="ThatsLife.Models.DAL.QuestionTypeRepository" Collapsed="true">
+    <Position X="5.25" Y="5.25" Width="2" />
+    <TypeIdentifier>
+      <HashCode>AARAAAAAAAAAEAAAAAAQAAAAAAEAAEAAAAAAAAAAAAA=</HashCode>
+      <FileName>Models\DAL\QuestionTypeRepository.cs</FileName>
+    </TypeIdentifier>
+    <Lollipop Position="0.2" />
+  </Class>
+  <Class Name="ThatsLife.Models.DAL.PrestigeScoreRepository" Collapsed="true">
+    <Position X="8" Y="0.5" Width="2.5" />
+    <TypeIdentifier>
+      <HashCode>AARAAAAAAAAAEAAAAAAQAAAAAAEAAEAAAAAAAAAAAAA=</HashCode>
+      <FileName>Models\DAL\PrestigeScoreRepository.cs</FileName>
+    </TypeIdentifier>
+    <ShowAsAssociation>
+      <Field Name="_Context" />
+    </ShowAsAssociation>
+    <Lollipop Position="0.2" />
+  </Class>
+  <Class Name="ThatsLife.Models.DAL.ProfileRepository" Collapsed="true">
+    <Position X="9.75" Y="1.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AARAAAAAAAAAEAAAAAAQAAAAAAEAAkAAAAAAAAAAAAA=</HashCode>
+      <FileName>Models\DAL\ProfileRepository.cs</FileName>
+    </TypeIdentifier>
+    <ShowAsAssociation>
+      <Field Name="_Context" />
+    </ShowAsAssociation>
+    <Lollipop Position="0.2" />
+  </Class>
+  <Class Name="ThatsLife.Models.DAL.QuizRepository" Collapsed="true">
+    <Position X="5" Y="2.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AARAAAAAAAAAEAAAAAAQAAAAAAEAAEAAAAAAAAAAAAA=</HashCode>
+      <FileName>Models\DAL\QuizRepository.cs</FileName>
+    </TypeIdentifier>
+    <ShowAsAssociation>
+      <Field Name="_Context" />
+    </ShowAsAssociation>
+    <Lollipop Position="0.2" />
+  </Class>
+  <Class Name="ThatsLife.Models.DAL.StockRepository" Collapsed="true">
+    <Position X="5.5" Y="0.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AARAAAAAAAAAEAAAAAAQAAAAAAEAAEAAAAAAAAAAAAA=</HashCode>
+      <FileName>Models\DAL\StockRepository.cs</FileName>
+    </TypeIdentifier>
+    <ShowAsAssociation>
+      <Field Name="_Context" />
+    </ShowAsAssociation>
+    <Lollipop Position="0.2" />
+  </Class>
+  <Class Name="ThatsLife.Models.DAL.TransactionRepository" Collapsed="true">
+    <Position X="9.5" Y="2.75" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AARAAAAAAAAAEAAAAAAQAAAAAAEAAEAAAAAAAAAAAAA=</HashCode>
+      <FileName>Models\DAL\TransactionRepository.cs</FileName>
+    </TypeIdentifier>
+    <ShowAsAssociation>
+      <Field Name="_Context" />
+    </ShowAsAssociation>
+    <Lollipop Position="0.2" />
+  </Class>
+  <Class Name="ThatsLife.Models.Entity.BaseEntity">
+    <Position X="17.5" Y="0.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAgAAAAIAAAA=</HashCode>
+      <FileName>Models\Entity\BaseEntity.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="ThatsLife.Models.Entity.Category">
+    <Position X="15" Y="2.25" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAACAAAAAAAEAAAAAAAAAAQAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>Models\Entity\Category.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="ThatsLife.Models.Entity.Difficulty">
+    <Position X="20.75" Y="0.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAACAAAAAAAAAAAAAAAAAAQAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>Models\Entity\Difficulty.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="ThatsLife.Models.Entity.PlayerCash">
+    <Position X="24" Y="5.25" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAACAAAAAAAAAAAAAAgAAAAAAAAAAAAAAAAAAAAAgAA=</HashCode>
+      <FileName>Models\Entity\PlayerCash.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="ThatsLife.Models.Entity.PlayerPrestigeScore">
+    <Position X="21.5" Y="5.25" Width="2.25" />
+    <TypeIdentifier>
+      <HashCode>AAACAAAAAgAAAAgAAAAAAAAAAAAAAAAAAEAAAAAAgAA=</HashCode>
+      <FileName>Models\Entity\PlayerPrestigeScore.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="ThatsLife.Models.Entity.PlayerProfile">
+    <Position X="18.75" Y="3" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>EAACAAAAAAAAAAACAAAAAAgAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>Models\Entity\PlayerProfile.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="ThatsLife.Models.Entity.PlayerQuiz">
+    <Position X="19.75" Y="5.25" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAGAAAAAAAAAQAAAAAAAAAACAAAAAAAAAAAAQAICAA=</HashCode>
+      <FileName>Models\Entity\PlayerQuiz.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="ThatsLife.Models.PlayerStock">
+    <Position X="18" Y="5.25" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AABSAAAAAAAAAAAAAABAAAAAAAAAAAAAAAAAAAAAgAA=</HashCode>
+      <FileName>Models\Entity\PlayerStock.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="ThatsLife.Models.Entity.PlayerTransaction">
+    <Position X="15.5" Y="5.25" Width="2" />
+    <TypeIdentifier>
+      <HashCode>AAACAAAAAQAAAAAAAAAAAAAAAIAAAAEAAAAAgAAAgQA=</HashCode>
+      <FileName>Models\Entity\PlayerTransaction.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="ThatsLife.Models.Entity.QuestionType">
+    <Position X="15" Y="0.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAACAAAAAAAAAAAAAAAAAAQAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>Models\Entity\QuestionType.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="ThatsLife.Models.Company">
+    <Position X="33" Y="0.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAIAAAgAQBAAAAIIIAICAAAAAIAEAAmAABAAACAMEA=</HashCode>
+      <FileName>Models\Company.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="ThatsLife.Models.PlayerRanking">
+    <Position X="31" Y="2.75" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>EAAAAAAAAAAAAEgAAAAAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>Models\PlayerRanking.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="ThatsLife.Models.PortfolioStock">
+    <Position X="37" Y="0.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAQAAAAAABAAAABAIBAAAQAAAKBAAgAAAAAEABCCAA=</HashCode>
+      <FileName>Models\PortfolioStock.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="ThatsLife.Models.Questions">
+    <Position X="41" Y="3.75" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAACAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>Models\Questions.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="ThatsLife.Models.TriviaQuestion">
+    <Position X="40.75" Y="0.75" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAABAQAABAAAAAAAAAAAAAgEAQAAAAAACAI=</HashCode>
+      <FileName>Models\Questions.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="ThatsLife.Models.StockQuote">
+    <Position X="35" Y="0.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AASAQAACAQBAIAAAAgAAAAAAAAggAAABA4CAAUIACII=</HashCode>
+      <FileName>Models\StockQuote.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="ThatsLife.Models.TriviaOverallChart">
+    <Position X="39.25" Y="4.75" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAAABAAAAAAAQAACAAAA=</HashCode>
+      <FileName>Models\TriviaOverallChart.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="ThatsLife.Models.Data">
+    <Position X="41.25" Y="5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAABAAAAAAAAAAAAEAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>Models\TriviaOverallChart.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="ThatsLife.Models.Dataset">
+    <Position X="43.25" Y="4.75" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAABAAAAAAAAAAAAAAAAgAAAAQAAAAAAA=</HashCode>
+      <FileName>Models\TriviaOverallChart.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Interface Name="ThatsLife.Models.DAL.IRepository&lt;T&gt;">
+    <Position X="2" Y="0.75" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAQAAAAAAAAAEAAAAAAQAAAAAAEAAEAAAAAAAAAAAAA=</HashCode>
+      <FileName>Models\DAL\IRepository.cs</FileName>
+    </TypeIdentifier>
+  </Interface>
+  <Font Name="Segoe UI" Size="9" />
+</ClassDiagram>

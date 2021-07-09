@@ -1,0 +1,17 @@
+﻿
+@model ThatsLife.Models.ViewModels.OverallChartViewModel
+
+<div class="chart-container" style="width:350px; height:350px;">
+    <canvas id="overallChart" width="350" height="350"></canvas>
+</div>
+<script>
+    document.addEventListener('DOMContentLoaded', (event) => {
+
+        var ctx = document.getElementById('overallChart');
+        var myChart = new Chart(ctx, @Html.Raw(Model.ChartJson) );
+
+
+
+       
+    });
+</script>

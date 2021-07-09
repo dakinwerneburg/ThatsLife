@@ -7,13 +7,14 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using ThatsLife.Models;
 using ThatsLife.Models.DAL;
+using ThatsLife.Models.DAL.SeedData;
 using ThatsLife.Models.Entity;
 
 namespace ThatsLife
 {
     public class Startup
     {
-        public IConfiguration Configuration { get;}
+        public IConfiguration Configuration { get; }
         public Startup(IConfiguration configuration)
         {
             Configuration = configuration;
@@ -38,16 +39,33 @@ namespace ThatsLife
             options.ClientSecret = googleAuthNSection["ClientSecret"];
         }).AddMicrosoftAccount(microsoftOptions =>
         {
-                microsoftOptions.ClientId = Configuration["Authentication:Microsoft:ClientId"];
+            microsoftOptions.ClientId = Configuration["Authentication:Microsoft:ClientId"];
             microsoftOptions.ClientSecret = Configuration["Authentication:Microsoft:ClientSecret"];
         });
+
+
+            
             services.AddScoped<IRepository<PlayerProfile>, ProfileRepository>();
             services.AddScoped<IRepository<PlayerStock>, StockRepository>();
             services.AddScoped<IRepository<PlayerTransaction>,TransactionRepository>();
             services.AddScoped<IRepository<PlayerCash>, CashRepository>();
             services.AddScoped<IRepository<PlayerPrestigeScore>, PrestigeScoreRepository>();
+            services.AddScoped<IRepository<Category>, CategoryRepository>();
+            services.AddScoped<IRepository<Difficulty>, DifficultyRepository>();
+            services.AddScoped<IRepository<QuestionType>, QuestionTypeRepository>();
+            services.AddScoped<IRepository<PlayerQuiz>, QuizRepository>();
+
+
+            services.AddDistributedMemoryCache();
+
+            services.AddSession(options =>
+            {
+                options.Cookie.IsEssential = true;
+            });
             services.AddControllersWithViews();
             services.AddRazorPages();
+
+            
         }
 
         public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
@@ -62,11 +80,18 @@ namespace ThatsLife
             app.UseAuthentication();
             app.UseAuthorization();
 
+            app.UseSession();
+            
+
             app.UseEndpoints(endpoints =>
             {
                 endpoints.MapDefaultControllerRoute();
                 endpoints.MapRazorPages();
             });
+
+            CategorySeedData.EnsurePopulated(app);
+            DifficultySeedData.EnsurePopulated(app);
+            QuestionTypeSeedData.EnsurePopulated(app);
         }
     }
 }
